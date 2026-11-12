@@ -1,8 +1,8 @@
 .venv/
 __pycache__/
 *.pyc
-data/
-media/
+/data/
+/media/
 .DS_Store
 .wrangler/
 node_modules/
