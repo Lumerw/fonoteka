@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track separator · Fonoteka</title>
+<link rel="stylesheet" href="/static/style.css">
+<meta name="robots" content="noindex, nofollow">
+
+</head>
+<body>
+<a class="skip" href="#tresc">Skip to content</a>
+<header class="site">
+  <div class="wrap bar">
+    <a class="logo" href="/en/">Fonoteka</a>
+    
+    <nav aria-label="Menu">
+      <ul class="menu">
+        <li><a href="/en/katalog" >Catalogue</a></li><li><a href="/en/separator" aria-current="page">Separator</a></li><li><a href="/en/odszumianie" >Denoise</a></li><li><a href="/en/spolecznosc" >Community</a></li><li><a href="/en/blog" >Blog</a></li><li><a href="/en/o-nas" >About</a></li>
+      </ul>
+    </nav>
+    <div class="account">
+      <details class="dropdown lang-menu">
+        <summary aria-label="Language: English"><span>EN</span></summary>
+        <ul class="dropdown-list" role="list">
+          
+          <li><a href="/separator" lang="pl" hreflang="pl" ><span class="code">PL</span>Polski</a></li>
+          
+          <li><a href="/en/separator" lang="en" hreflang="en" aria-current="true"><span class="code">EN</span>English</a></li>
+          
+          <li><a href="/uk/separator" lang="uk" hreflang="uk" ><span class="code">UK</span>Українська</a></li>
+          
+        </ul>
+      </details>
+      <span class="desk actions">
+      
+        <a href="/en/logowanie">Log in</a>
+        <a class="btn small" href="/en/rejestracja">Sign up</a>
+      
+      </span>
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <div class="mobile-panel">
+          <ul><li><a href="/en/katalog" >Catalogue</a></li><li><a href="/en/separator" aria-current="page">Separator</a></li><li><a href="/en/odszumianie" >Denoise</a></li><li><a href="/en/spolecznosc" >Community</a></li><li><a href="/en/blog" >Blog</a></li><li><a href="/en/o-nas" >About</a></li></ul>
+          <div class="acc">
+          <a class="btn small secondary" href="/en/logowanie">Log in</a><a class="btn small" href="/en/rejestracja">Sign up</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<div class="demo-bar"><div class="wrap">Prototype demo: listening, the stem mixer, legal cards and sheet music work. Accounts, downloads, the separator and denoising run in the full server version.</div></div>
+<main id="tresc" class="wrap">
+  
+  
+<header class="page-head">
+  <h1>Track separator</h1>
+  <p class="lead">Split a recording into vocal, rhythm and melody.</p>
+</header>
+<div class="with-aside">
+  <div>
+
+<div class="card soft locked">
+  <p>The tool is free. Log in or sign up to use it.</p>
+  <div class="actions"><a class="btn" href="/en/logowanie?next=/separator">Log in</a><a class="btn secondary" href="/en/rejestracja">Sign up</a></div>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="card">
+  <input type="hidden" name="csrf" value="3d6470bb64d0412f906d7224fd12b9b5">
+  <fieldset disabled style="margin:0">
+  <ol class="form-steps">
+    <li>
+      <h3>Choose a file</h3>
+      <label class="dropzone" for="audio"><strong>Audio file (MP3, WAV, FLAC, OGG)</strong><span class="muted small">FLAC · WAV · MP3 · do 5 min · do 60 MB</span>
+        <input id="audio" name="audio" type="file" accept="audio/*,.flac" required></label>
+    </li>
+    <li>
+      <h3>Denoising before separation</h3>
+      <div class="option-cards" role="radiogroup" aria-label="Source medium">
+  
+  <label class="option-card"><input type="radio" name="preset" value="szelak" checked>
+    <span><strong>Płyta szelakowa 78 obr./min</strong><span>78 rpm records (c. 1900–1950): mono, crackle, needle hiss, band up to c. 9 kHz.</span></span></label>
+  
+  <label class="option-card"><input type="radio" name="preset" value="winyl" >
+    <span><strong>Płyta winylowa</strong><span>LPs and singles: gentler denoising, full band, stereo.</span></span></label>
+  
+  <label class="option-card"><input type="radio" name="preset" value="lagodne" >
+    <span><strong>Łagodne (nagrania mało zaszumione)</strong><span>Lightly noisy recordings, e.g. tapes and later transfers.</span></span></label>
+  
+  
+  <label class="option-card"><input type="radio" name="preset" value="">
+    <span><strong>No denoising</strong><span>The raw recording goes straight to separation.</span></span></label>
+  
+</div>
+    </li>
+    
+    <li>
+      <h3>Confirm and start</h3>
+      <details class="disclosure" style="margin-bottom:16px"><summary>Strength and options</summary><div class="field">
+  <span class="label" id="lbl-strength">Strength</span>
+  <div class="segmented" role="radiogroup" aria-labelledby="lbl-strength">
+    <label><input type="radio" name="strength" value="1" >Gentle</label><label><input type="radio" name="strength" value="2" checked>Medium</label><label><input type="radio" name="strength" value="3" >Strong</label>
+  </div>
+</div>
+<label class="check"><input type="checkbox" name="hum" value="1"><span>Remove 50 Hz mains hum</span></label></details>
+      <label class="check" style="margin-bottom:20px"><input type="checkbox" name="rights" value="1" required><span>I declare that I have the right to process this recording (e.g. the work and recording are in the public domain, or I have permission).</span></label>
+      <button class="btn">Separate tracks</button>
+    </li>
+  </ol>
+  </fieldset>
+</form></div>
+  <aside class="aside">
+    <div class="card"><h2>What you get</h2><ul class="checklist"><li>4 tracks: vocal, accompaniment, rhythm, melody (FLAC)</li><li>Preview in the mixer before downloading</li><li>Private files, deleted after 24 hours</li></ul></div>
+    <div class="card soft"><h2>When do we separate tracks?</h2><p class="small">Catalogue recordings are separated once, on ingest: a sound engineer checks the stems before publication and downloads are instant. The separator for your files runs on demand in a queue; results are private and disappear after 24 hours.</p></div>
+  </aside>
+</div>
+
+
+</main>
+<script>window.FONO = {"choose": "Choose file", "drop": "or drag it here", "pause": "Pause", "play": "Play", "position": "Playback position"};</script>
+<script src="/static/ui.js" defer></script>
+<footer class="site">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <strong>Fonoteka</strong>
+      <p>An open archive of Polish recordings from 1918–1939 in the public domain.</p>
+      <p>Fonoteka is free and non-commercial. Public-domain materials are marked with the Public Domain Mark.</p>
+      <p>Prototype – working draft for testing.</p>
+    </div>
+    <div>
+      <h2>Project</h2>
+      <ul>
+        <li><a href="/en/katalog">Catalogue</a></li>
+        <li><a href="/en/separator">Separator</a></li>
+        <li><a href="/en/odszumianie">Denoise</a></li>
+        <li><a href="/en/spolecznosc">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Information</h2>
+      <ul>
+        <li><a href="/en/o-nas">About</a></li>
+        <li><a href="/en/strona/regulamin">Terms</a></li>
+        <li><a href="/en/strona/prywatnosc">Privacy</a></li>
+        <li><a href="/en/strona/dostepnosc">Accessibility</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('form[method=post]').forEach(f => { f.querySelectorAll('button, input, select, textarea').forEach(e => e.disabled = true);
+  const p = document.createElement('p'); p.className = 'note'; p.textContent = "This form is disabled in the demo."; f.prepend(p); });
+// filtrowanie katalogu po stronie przeglądarki (wersja statyczna)
+const qs = new URLSearchParams(location.search), q = (qs.get('q') || '').toLowerCase(), g = qs.get('gatunek') || '';
+if ((q || g) && document.querySelector('ul.tracks')) { let n = 0;
+  document.querySelectorAll('ul.tracks .track-row').forEach(li => { const ok = (!q || li.textContent.toLowerCase().includes(q)) && (!g || li.textContent.includes(g)); li.hidden = !ok; n += ok; });
+  const st = document.querySelector('[role=status]'); if (st) st.textContent = st.textContent.replace(/\d+$/, n);
+  const qi = document.getElementById('q'); if (qi) qi.value = qs.get('q') || ''; }
+</script>
+</body>
+</html>

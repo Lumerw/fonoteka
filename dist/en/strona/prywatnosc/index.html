@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy · Fonoteka</title>
+<link rel="stylesheet" href="/static/style.css">
+<meta name="robots" content="noindex, nofollow">
+
+</head>
+<body>
+<a class="skip" href="#tresc">Skip to content</a>
+<header class="site">
+  <div class="wrap bar">
+    <a class="logo" href="/en/">Fonoteka</a>
+    
+    <nav aria-label="Menu">
+      <ul class="menu">
+        <li><a href="/en/katalog" >Catalogue</a></li><li><a href="/en/separator" >Separator</a></li><li><a href="/en/odszumianie" >Denoise</a></li><li><a href="/en/spolecznosc" >Community</a></li><li><a href="/en/blog" >Blog</a></li><li><a href="/en/o-nas" >About</a></li>
+      </ul>
+    </nav>
+    <div class="account">
+      <details class="dropdown lang-menu">
+        <summary aria-label="Language: English"><span>EN</span></summary>
+        <ul class="dropdown-list" role="list">
+          
+          <li><a href="/strona/prywatnosc" lang="pl" hreflang="pl" ><span class="code">PL</span>Polski</a></li>
+          
+          <li><a href="/en/strona/prywatnosc" lang="en" hreflang="en" aria-current="true"><span class="code">EN</span>English</a></li>
+          
+          <li><a href="/uk/strona/prywatnosc" lang="uk" hreflang="uk" ><span class="code">UK</span>Українська</a></li>
+          
+        </ul>
+      </details>
+      <span class="desk actions">
+      
+        <a href="/en/logowanie">Log in</a>
+        <a class="btn small" href="/en/rejestracja">Sign up</a>
+      
+      </span>
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <div class="mobile-panel">
+          <ul><li><a href="/en/katalog" >Catalogue</a></li><li><a href="/en/separator" >Separator</a></li><li><a href="/en/odszumianie" >Denoise</a></li><li><a href="/en/spolecznosc" >Community</a></li><li><a href="/en/blog" >Blog</a></li><li><a href="/en/o-nas" >About</a></li></ul>
+          <div class="acc">
+          <a class="btn small secondary" href="/en/logowanie">Log in</a><a class="btn small" href="/en/rejestracja">Sign up</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<div class="demo-bar"><div class="wrap">Prototype demo: listening, the stem mixer, legal cards and sheet music work. Accounts, downloads, the separator and denoising run in the full server version.</div></div>
+<main id="tresc" class="wrap">
+  
+  
+<article class="prose" style="padding-top:48px">
+
+<h1>Privacy</h1>
+<p class="flash">Szkic do opracowania przez prawnika.</p>
+<ul>
+  <li>Zbieramy: adres e-mail, imię lub pseudonim, opcjonalny profil, historię pobrań i wpisy w społeczności.</li>
+  <li>Pliki wgrane do separatora usuwamy automatycznie po 24 godzinach.</li>
+  <li>Nie używamy reklamowych plików cookie; sesja jest przechowywana w niezbędnym pliku cookie.</li>
+  <li>W panelu możesz pobrać swoje dane (JSON) i usunąć konto.</li>
+</ul>
+
+</article>
+
+</main>
+<script>window.FONO = {"choose": "Choose file", "drop": "or drag it here", "pause": "Pause", "play": "Play", "position": "Playback position"};</script>
+<script src="/static/ui.js" defer></script>
+<footer class="site">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <strong>Fonoteka</strong>
+      <p>An open archive of Polish recordings from 1918–1939 in the public domain.</p>
+      <p>Fonoteka is free and non-commercial. Public-domain materials are marked with the Public Domain Mark.</p>
+      <p>Prototype – working draft for testing.</p>
+    </div>
+    <div>
+      <h2>Project</h2>
+      <ul>
+        <li><a href="/en/katalog">Catalogue</a></li>
+        <li><a href="/en/separator">Separator</a></li>
+        <li><a href="/en/odszumianie">Denoise</a></li>
+        <li><a href="/en/spolecznosc">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Information</h2>
+      <ul>
+        <li><a href="/en/o-nas">About</a></li>
+        <li><a href="/en/strona/regulamin">Terms</a></li>
+        <li><a href="/en/strona/prywatnosc">Privacy</a></li>
+        <li><a href="/en/strona/dostepnosc">Accessibility</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('form[method=post]').forEach(f => { f.querySelectorAll('button, input, select, textarea').forEach(e => e.disabled = true);
+  const p = document.createElement('p'); p.className = 'note'; p.textContent = "This form is disabled in the demo."; f.prepend(p); });
+// filtrowanie katalogu po stronie przeglądarki (wersja statyczna)
+const qs = new URLSearchParams(location.search), q = (qs.get('q') || '').toLowerCase(), g = qs.get('gatunek') || '';
+if ((q || g) && document.querySelector('ul.tracks')) { let n = 0;
+  document.querySelectorAll('ul.tracks .track-row').forEach(li => { const ok = (!q || li.textContent.toLowerCase().includes(q)) && (!g || li.textContent.includes(g)); li.hidden = !ok; n += ok; });
+  const st = document.querySelector('[role=status]'); if (st) st.textContent = st.textContent.replace(/\d+$/, n);
+  const qi = document.getElementById('q'); if (qi) qi.value = qs.get('q') || ''; }
+</script>
+</body>
+</html>

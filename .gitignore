@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 data/
 media/
-dist/
 .DS_Store
 .wrangler/
 node_modules/

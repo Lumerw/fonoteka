@@ -21,7 +21,10 @@ def pages(c):
 def main():
     shutil.rmtree(DIST, ignore_errors=True)
     shutil.copytree(os.path.join(ROOT, "app", "static"), os.path.join(DIST, "static"))
-    for slug in os.listdir(os.path.join(A.MEDIA, "tracks")):
+    published = {r["slug"] for r in A.raw_db().execute("SELECT slug FROM tracks WHERE status='published'")}
+    for slug in sorted(os.listdir(os.path.join(A.MEDIA, "tracks"))):
+        if slug not in published:  # nagrania w statusie review nie trafiają do wersji publicznej
+            continue
         dst = os.path.join(DIST, "media", "utwory", slug)
         os.makedirs(dst, exist_ok=True)
         for n in ("podglad.mp3", "wokal.mp3", "rytm.mp3", "melodia.mp3"):

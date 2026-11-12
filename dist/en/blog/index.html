@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog · Fonoteka</title>
+<link rel="stylesheet" href="/static/style.css">
+<meta name="robots" content="noindex, nofollow">
+
+</head>
+<body>
+<a class="skip" href="#tresc">Skip to content</a>
+<header class="site">
+  <div class="wrap bar">
+    <a class="logo" href="/en/">Fonoteka</a>
+    
+    <nav aria-label="Menu">
+      <ul class="menu">
+        <li><a href="/en/katalog" >Catalogue</a></li><li><a href="/en/separator" >Separator</a></li><li><a href="/en/odszumianie" >Denoise</a></li><li><a href="/en/spolecznosc" >Community</a></li><li><a href="/en/blog" aria-current="page">Blog</a></li><li><a href="/en/o-nas" >About</a></li>
+      </ul>
+    </nav>
+    <div class="account">
+      <details class="dropdown lang-menu">
+        <summary aria-label="Language: English"><span>EN</span></summary>
+        <ul class="dropdown-list" role="list">
+          
+          <li><a href="/blog" lang="pl" hreflang="pl" ><span class="code">PL</span>Polski</a></li>
+          
+          <li><a href="/en/blog" lang="en" hreflang="en" aria-current="true"><span class="code">EN</span>English</a></li>
+          
+          <li><a href="/uk/blog" lang="uk" hreflang="uk" ><span class="code">UK</span>Українська</a></li>
+          
+        </ul>
+      </details>
+      <span class="desk actions">
+      
+        <a href="/en/logowanie">Log in</a>
+        <a class="btn small" href="/en/rejestracja">Sign up</a>
+      
+      </span>
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <div class="mobile-panel">
+          <ul><li><a href="/en/katalog" >Catalogue</a></li><li><a href="/en/separator" >Separator</a></li><li><a href="/en/odszumianie" >Denoise</a></li><li><a href="/en/spolecznosc" >Community</a></li><li><a href="/en/blog" aria-current="page">Blog</a></li><li><a href="/en/o-nas" >About</a></li></ul>
+          <div class="acc">
+          <a class="btn small secondary" href="/en/logowanie">Log in</a><a class="btn small" href="/en/rejestracja">Sign up</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+<div class="demo-bar"><div class="wrap">Prototype demo: listening, the stem mixer, legal cards and sheet music work. Accounts, downloads, the separator and denoising run in the full server version.</div></div>
+<main id="tresc" class="wrap">
+  
+  
+<header class="page-head"><h1>Blog</h1><p class="lead">Content available in Polish.</p></header>
+<div class="grid-3">
+
+<a class="card card-link" href="/en/blog/nagranie-wolne-piosenka-chroniona"><span class="muted small">2026-11-12</span><h2 style="font-size:1.25rem">Nagranie wolne, piosenka chroniona? Dwa rodzaje praw</h2><p class="muted">Płyta z 1935 r. nie oznacza automatycznie, że wolno jej użyć. Wyjaśniamy różnicę między prawami do utworu a prawami do nagrania.</p><span class="more">More →</span></a>
+
+<a class="card card-link" href="/en/blog/jak-separujemy-nagrania"><span class="muted small">2026-11-10</span><h2 style="font-size:1.25rem">Jak rozdzielamy ścieżki w nagraniach z płyt szelakowych</h2><p class="muted">Nagrania z lat 30. są monofoniczne, zaszumione i wąskopasmowe. Opisujemy, co robimy i gdzie są granice tej metody.</p><span class="more">More →</span></a>
+
+<a class="card card-link" href="/en/blog/tworcy-ktorych-nagrania-wracaja"><span class="muted small">2026-11-05</span><h2 style="font-size:1.25rem">Kagan, Gold, Białostocki, Włast – twórcy, których piosenki wracają</h2><p class="muted">Wielu autorów warszawskich przebojów dwudziestolecia zginęło w czasie Zagłady. Ich utwory są dziś w domenie publicznej.</p><span class="more">More →</span></a>
+
+</div>
+
+</main>
+<script>window.FONO = {"choose": "Choose file", "drop": "or drag it here", "pause": "Pause", "play": "Play", "position": "Playback position"};</script>
+<script src="/static/ui.js" defer></script>
+<footer class="site">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <strong>Fonoteka</strong>
+      <p>An open archive of Polish recordings from 1918–1939 in the public domain.</p>
+      <p>Fonoteka is free and non-commercial. Public-domain materials are marked with the Public Domain Mark.</p>
+      <p>Prototype – working draft for testing.</p>
+    </div>
+    <div>
+      <h2>Project</h2>
+      <ul>
+        <li><a href="/en/katalog">Catalogue</a></li>
+        <li><a href="/en/separator">Separator</a></li>
+        <li><a href="/en/odszumianie">Denoise</a></li>
+        <li><a href="/en/spolecznosc">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Information</h2>
+      <ul>
+        <li><a href="/en/o-nas">About</a></li>
+        <li><a href="/en/strona/regulamin">Terms</a></li>
+        <li><a href="/en/strona/prywatnosc">Privacy</a></li>
+        <li><a href="/en/strona/dostepnosc">Accessibility</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('form[method=post]').forEach(f => { f.querySelectorAll('button, input, select, textarea').forEach(e => e.disabled = true);
+  const p = document.createElement('p'); p.className = 'note'; p.textContent = "This form is disabled in the demo."; f.prepend(p); });
+// filtrowanie katalogu po stronie przeglądarki (wersja statyczna)
+const qs = new URLSearchParams(location.search), q = (qs.get('q') || '').toLowerCase(), g = qs.get('gatunek') || '';
+if ((q || g) && document.querySelector('ul.tracks')) { let n = 0;
+  document.querySelectorAll('ul.tracks .track-row').forEach(li => { const ok = (!q || li.textContent.toLowerCase().includes(q)) && (!g || li.textContent.includes(g)); li.hidden = !ok; n += ok; });
+  const st = document.querySelector('[role=status]'); if (st) st.textContent = st.textContent.replace(/\d+$/, n);
+  const qi = document.getElementById('q'); if (qi) qi.value = qs.get('q') || ''; }
+</script>
+</body>
+</html>
