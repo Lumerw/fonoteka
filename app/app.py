@@ -136,6 +136,16 @@ def csrf():
             abort(400)
 
 
+@app.template_filter("host")
+def host_filter(u):
+    from urllib.parse import urlparse
+    try:
+        h = urlparse(u)
+        return (h.netloc.replace("www.", "") + (h.path[:40] + "…" if len(h.path) > 40 else h.path)) if h.netloc else u
+    except Exception:
+        return u
+
+
 @app.context_processor
 def csrf_ctx():
     if "csrf" not in session:

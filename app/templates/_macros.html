@@ -1,18 +1,46 @@
 {% macro status_badge(s) -%}
-<span class="badge st-{{ s }}">{{ t('st.' ~ s) }}</span>
+<span class="badge st-{{ s }}">{{ t('st.short.' ~ s) }}</span>
 {%- endmacro %}
-{% macro track_row(tr) -%}
-<li class="track-row">
-  <a href="{{ url_for('track', slug=tr.slug) }}"><strong>{{ tr.title }}</strong></a>
-  <span class="muted">{{ tr.composer }}{% if tr.lyricist %} / {{ tr.lyricist }}{% endif %} · {{ tr.performer }}{% if tr.year %} · {{ tr.year }}{% endif %}</span>
-  <span class="meta">{{ tr.genre }}{% if tr.duration %} · {{ fmt_dur(tr.duration) }}{% endif %}</span>
-  {{ status_badge(tr.legal_status) }}
+
+{% macro who(tr) -%}
+{{ tr.composer }}{% if tr.lyricist %} · {{ tr.lyricist.replace(' (libretto)','') }}{% endif %}
+{%- endmacro %}
+
+{% macro track_card(tr) -%}
+<a class="card card-link track-card" href="{{ url_for('track', slug=tr.slug) }}">
+  <span class="eyebrow" style="margin:0">{{ tr.genre }}</span>
+  <span class="title">{{ tr.title }}</span>
+  <span class="who">{{ who(tr) }}</span>
+  <span class="foot">{{ status_badge(tr.legal_status) }}<span>{{ fmt_dur(tr.duration) }}</span></span>
+</a>
+{%- endmacro %}
+
+{% macro track_item(tr) -%}
+<li class="track-item">
+  <button type="button" class="play-mini" data-src="{{ url_for('track_media', slug=tr.slug, name='podglad.mp3') }}" aria-pressed="false" aria-label="{{ t('tr.play') }}: {{ tr.title }}">▶</button>
+  <div>
+    <a class="title" href="{{ url_for('track', slug=tr.slug) }}">{{ tr.title }}</a>
+    <div class="who">{{ who(tr) }}</div>
+    <div class="meta">{{ tr.performer }}</div>
+  </div>
+  <div class="side">
+    {{ status_badge(tr.legal_status) }}
+    <span>{{ tr.genre }}{% if tr.duration %} · {{ fmt_dur(tr.duration) }}{% endif %}</span>
+  </div>
 </li>
 {%- endmacro %}
+
+{% macro post_card(p, excerpt=true) -%}
+<li>
+  <a class="card card-link post-card" href="{{ url_for('post', pid=p.id) }}">
+    <span class="top"><span class="tag">{{ t('com.t.' ~ p.type) }}</span>{% if p.ttitle %}<span class="muted small">{{ p.ttitle }}</span>{% endif %}</span>
+    <h3>{{ p.title }}</h3>
+    {% if excerpt %}<p>{{ p.body[:170] }}{% if p.body|length > 170 %}…{% endif %}</p>{% endif %}
+    <span class="meta">{{ p.name }} · {{ fmt_date(p.created) }}{% if p.nrep is defined and p.nrep %} · {{ p.nrep }} {{ t('com.replies')|lower }}{% endif %}</span>
+  </a>
+</li>
+{%- endmacro %}
+
 {% macro post_item(p) -%}
-<li class="post-row">
-  <span class="tag">{{ t('com.t.' ~ p.type) }}</span>
-  <a href="{{ url_for('post', pid=p.id) }}">{{ p.title }}</a>
-  <span class="muted">{{ p.name }} · {{ fmt_date(p.created) }}{% if p.nrep is defined and p.nrep %} · {{ p.nrep }} {{ t('com.replies')|lower }}{% endif %}</span>
-</li>
+<li><a href="{{ url_for('post', pid=p.id) }}">{{ p.title }}</a><span class="meta">{{ t('com.t.' ~ p.type) }} · {{ p.name }} · {{ fmt_date(p.created) }}</span></li>
 {%- endmacro %}

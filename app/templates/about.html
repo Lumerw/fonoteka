@@ -5,43 +5,70 @@
  'pl': 'Fonoteka to otwarte, bezpłatne archiwum polskich nagrań z lat 1918–1939, których status domeny publicznej sprawdza prawnik. Udostępniamy je w formie gotowej do pracy: z opisem, kartą prawną, osobnymi ścieżkami i zapisem nutowym.',
  'en': 'Fonoteka is an open, free archive of Polish recordings from 1918–1939 whose public-domain status is checked by a lawyer. We publish them ready to use: with a description, a legal card, separate tracks and sheet music.',
  'uk': 'Фонотека – відкритий безкоштовний архів польських записів 1918–1939 років, статус суспільного надбання яких перевіряє юрист. Ми публікуємо їх готовими до роботи: з описом, правовою карткою, окремими доріжками та нотами.'} %}
-<article class="prose">
-<h1>{{ t('nav.about') }}</h1>
-<p class="lead">{{ lead[L] }}</p>
-{% if L!='pl' %}<p class="muted">{{ t('gen.only_pl') }}</p>{% endif %}
+<header class="page-head">
+  <h1>{{ t('nav.about') }}</h1>
+  <p class="lead">{{ lead[L] }}</p>
+  {% if L!='pl' %}<p class="muted">{{ t('gen.only_pl') }}</p>{% endif %}
+</header>
 
-<h2>Po co powstaje Fonoteka</h2>
-<p>Dwudziestolecie międzywojenne to złoty okres polskiej fonografii. Wielu autorów tego repertuaru zginęło w czasie II wojny światowej, a ich nagrania przetrwały we fragmentach: na płytach szelakowych w zbiorach prywatnych oraz w polskich i zagranicznych archiwach. Twórcy, którzy chcą sięgnąć po ten materiał, nie wiedzą, z których nagrań mogą korzystać legalnie. Fonoteka zbiera je w jednym miejscu i opisuje ich status prawny.</p>
+<section class="section" style="margin-top:32px">
+  <div class="grid-2" style="align-items:start">
+    <div><h2>Po co powstaje Fonoteka</h2></div>
+    <div class="prose">
+      <p>Dwudziestolecie międzywojenne to złoty okres polskiej fonografii. Wielu autorów tego repertuaru zginęło w czasie II wojny światowej, a ich nagrania przetrwały we fragmentach.</p>
+      <p>Twórcy nie wiedzą, z których nagrań mogą korzystać legalnie. Fonoteka zbiera je w jednym miejscu i opisuje status prawny każdego z nich.</p>
+    </div>
+  </div>
+</section>
 
-<h2>Jak sprawdzamy status prawny</h2>
-<ol>
-  <li><strong>Utwór.</strong> Kompozycja i tekst są w domenie publicznej, gdy od końca roku śmierci ostatniego z twórców (kompozytora, autora tekstu, ewentualnie aranżera i tłumacza) minęło 70 lat. W 2026 r. dotyczy to twórców zmarłych najpóźniej w 1955 r., a w 2027 r. – w 1956 r.</li>
-  <li><strong>Nagranie.</strong> Prawa wykonawców i producentów nagrań z lat 1918–1939 wygasły (okres ochrony był liczony od daty nagrania lub publikacji i upłynął przed wydłużeniem ochrony w 2013 r.).</li>
-  <li><strong>Źródło.</strong> Każda kopia cyfrowa ma opisane pochodzenie. Przed publikacją prawnik ocenia także warunki, na jakich archiwum udostępniło plik.</li>
-  <li><strong>Karta prawna.</strong> Wynik zapisujemy w karcie z numerem wersji. Konto użytkownika zapamiętuje, z którą wersją karty pobrano plik.</li>
-</ol>
+<section class="section">
+  <div class="section-head"><div><h2>Jak sprawdzamy status prawny</h2><p>Cztery kroki dla każdego nagrania.</p></div></div>
+  <ol class="steps" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <li><h3>Utwór</h3><p>Muzyka i tekst są wolne 70 lat po śmierci ostatniego z autorów. W 2027 r. – gdy wszyscy zmarli najpóźniej w 1956 r.</p></li>
+    <li><h3>Nagranie</h3><p>Prawa wykonawców i producentów nagrań z lat 1918–1939 wygasły.</p></li>
+    <li><h3>Źródło</h3><p>Każda kopia ma opisane pochodzenie i warunki udostępnienia przez archiwum.</p></li>
+    <li><h3>Karta prawna</h3><p>Wynik z numerem wersji. Konto zapamiętuje, z którą wersją pobrano plik.</p></li>
+  </ol>
+</section>
 
-<h2>Jak korzystamy z AI</h2>
-<p>AI służy wyłącznie do rekonstrukcji i separacji istniejących nagrań. Nie trenujemy własnego modelu i nie generujemy głosów ani wykonań zmarłych artystów. Przy każdym nagraniu opisujemy użyte narzędzia, a oryginał jest dostępny obok ścieżek.</p>
+<section class="section">
+  <div class="grid-2" style="align-items:start">
+    <div><h2>Jak korzystamy z AI</h2></div>
+    <ul class="checklist">
+      <li>Tylko do separacji istniejących nagrań – odszumianie działa bez AI.</li>
+      <li>Nie trenujemy własnego modelu.</li>
+      <li>Nie generujemy głosów ani wykonań zmarłych artystów.</li>
+      <li>Oryginał jest zawsze dostępny obok ścieżek.</li>
+    </ul>
+  </div>
+</section>
 
-<h2>Zespół</h2>
-<ul>
-  <li><strong>Wojciech Lumer</strong> – koordynacja, projekt i programowanie platformy, badania z użytkownikami, gitara.</li>
-  <li><strong>Mateusz Spyrka</strong> – kompozytor, kierownictwo muzyczne koncertu.</li>
-  <li><strong>Jan Zabłocki</strong> – algorytm światła sterowanego stemami, realizacja światła.</li>
-  <li>Muzykolog, prawnik, realizator dźwięku, muzyk-transkryptor – <em>do wyłonienia</em>.</li>
-</ul>
+<section class="section">
+  <div class="section-head"><h2>Zespół</h2></div>
+  <div class="grid-3">
+    <div class="card"><h3>Wojciech Lumer</h3><p class="muted small">Koordynacja, projekt i programowanie platformy, badania z użytkownikami, gitara.</p></div>
+    <div class="card"><h3>Mateusz Spyrka</h3><p class="muted small">Kompozytor, kierownictwo muzyczne koncertu.</p></div>
+    <div class="card"><h3>Jan Zabłocki</h3><p class="muted small">Algorytm światła sterowanego ścieżkami, realizacja światła.</p></div>
+  </div>
+  <p class="muted small" style="margin-top:16px">Muzykolog, prawnik, realizator dźwięku i muzyk-transkryptor – do wyłonienia.</p>
+</section>
 
-<h2>Zasady</h2>
-<ul>
-  <li>Fonoteka jest bezpłatna i niekomercyjna. Konto jest bezpłatne.</li>
-  <li>Zawsze podpisujemy autorów i wykonawców i publikujemy noty biograficzne.</li>
-  <li>Materiały w domenie publicznej oznaczamy Znakiem Domeny Publicznej, a zapis nutowy udostępniamy na licencji CC0.</li>
-  <li>Spełniamy WCAG 2.2 AA; w testach bierze udział osoba korzystająca z czytnika ekranu.</li>
-</ul>
+<section class="section">
+  <div class="grid-2" style="align-items:start">
+    <div><h2>Zasady</h2></div>
+    <ul class="checklist">
+      <li>Bezpłatnie i niekomercyjnie, także konto.</li>
+      <li>Zawsze podpisujemy autorów i wykonawców.</li>
+      <li>Znak Domeny Publicznej dla nagrań, CC0 dla zapisu nutowego.</li>
+      <li>Dostępność zgodna z WCAG 2.2 AA.</li>
+    </ul>
+  </div>
+</section>
 
-<h2>Współpraca</h2>
-<p>Szukamy archiwów, bibliotek i kolekcjonerów, którzy mają nagrania z lat 1918–1939. Zgłoś zbiór w <a href="{{ url_for('community', nowy='zbior') }}#nowy">społeczności</a>.</p>
-<p class="muted">Miejsce na informację o dofinansowaniu (logotypy i formuła zgodnie z umową).</p>
-</article>
+<section class="section card soft">
+  <h2>Masz nagrania z lat 1918–1939?</h2>
+  <p>Szukamy archiwów, bibliotek i kolekcjonerów płyt z epoki.</p>
+  <a class="btn" href="{{ url_for('community', nowy='zbior') }}#nowy">Zgłoś zbiór</a>
+  <p class="muted small" style="margin-top:24px">Miejsce na informację o dofinansowaniu (logotypy i formuła zgodnie z umową).</p>
+</section>
 {% endblock %}

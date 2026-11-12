@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}{{ t('nav.blog') }}{% endblock %}
 {% block content %}
-<h1>{{ t('nav.blog') }}</h1>
-{% if L!='pl' %}<p class="muted">{{ t('gen.only_pl') }}</p>{% endif %}
+<header class="page-head"><h1>{{ t('nav.blog') }}</h1>{% if L!='pl' %}<p class="lead">{{ t('gen.only_pl') }}</p>{% endif %}</header>
+<div class="grid-3">
 {% for b in posts %}
-<article class="card"><h2><a href="{{ url_for('blog_post', slug=b.slug) }}">{{ b.title }}</a></h2><p class="muted">{{ b.date }}</p><p>{{ b.lead }}</p></article>
+<a class="card card-link" href="{{ url_for('blog_post', slug=b.slug) }}"><span class="muted small">{{ b.date }}</span><h2 style="font-size:1.25rem">{{ b.title }}</h2><p class="muted">{{ b.lead }}</p><span class="more">{{ t('gen.more') }} →</span></a>
 {% endfor %}
+</div>
 {% endblock %}

@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "fonoteka", "runtimeExecutable": ".venv/bin/python", "runtimeArgs": ["app/app.py"], "port": 5055 }
+  ]
+}

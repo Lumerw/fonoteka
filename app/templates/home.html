@@ -1,18 +1,24 @@
-{% extends 'base.html' %}{% from '_macros.html' import track_row, post_item with context %}
+{% extends 'base.html' %}{% from '_macros.html' import track_card, post_item with context %}
 {% block title %}{{ t('nav.home') }}{% endblock %}
 {% block content %}
 <section class="hero">
-  <h1>Fonoteka</h1>
-  <p class="lead">{{ t('home.lead') }}</p>
+  <p class="eyebrow">{{ t('home.eyebrow') }}</p>
+  <h1>{{ t('home.h1') }}</h1>
+  <p class="lead">{{ t('home.lead2') }}</p>
   <form class="search" action="{{ url_for('catalog') }}" role="search">
     <label for="q" class="sr">{{ t('home.search') }}</label>
     <input id="q" name="q" type="search" placeholder="{{ t('home.search') }}">
     <button class="btn">{{ t('cat.q') }}</button>
   </form>
+  <div class="facts-row">
+    <span><strong>1918–1939</strong></span>
+    <span><strong>PL · EN · UA</strong></span>
+    <span><strong>0 zł</strong></span>
+  </div>
 </section>
 
-<section aria-labelledby="how">
-  <h2 id="how">{{ t('home.how') }}</h2>
+<section class="section" aria-labelledby="how">
+  <div class="section-head"><h2 id="how">{{ t('home.how') }}</h2></div>
   <ol class="steps">
     <li><h3>{{ t('home.step1.t') }}</h3><p>{{ t('home.step1.d') }}</p></li>
     <li><h3>{{ t('home.step2.t') }}</h3><p>{{ t('home.step2.d') }}</p></li>
@@ -20,25 +26,30 @@
   </ol>
 </section>
 
-<section aria-labelledby="fromcat">
-  <div class="section-head"><h2 id="fromcat">{{ t('home.from_catalog') }}</h2><a href="{{ url_for('catalog') }}">{{ t('home.all') }} →</a></div>
-  <ul class="tracks">{% for tr in tracks %}{{ track_row(tr) }}{% endfor %}</ul>
+<section class="section" aria-labelledby="fromcat">
+  <div class="section-head">
+    <div><h2 id="fromcat">{{ t('home.from_catalog') }}</h2><p>{{ t('cat.lead') }}</p></div>
+    <a href="{{ url_for('catalog') }}">{{ t('home.all') }} →</a>
+  </div>
+  <div class="track-cards">{% for tr in tracks %}{{ track_card(tr) }}{% endfor %}</div>
 </section>
 
-<section class="box">
-  <h2>{{ t('home.sep.t') }}</h2>
-  <p>{{ t('home.sep.d') }}</p>
-  <a class="btn" href="{{ url_for('separator') }}">{{ t('home.sep.cta') }}</a>
+<section class="section" aria-labelledby="tools">
+  <div class="section-head"><div><h2 id="tools">{{ t('home.tools') }}</h2><p>{{ t('home.tools.d') }}</p></div></div>
+  <div class="grid-2">
+    <a class="card card-link" href="{{ url_for('separator') }}"><h3>{{ t('nav.separator') }}</h3><p class="muted">{{ t('home.sep.card') }}</p><span class="more">{{ t('home.open') }} →</span></a>
+    <a class="card card-link" href="{{ url_for('denoise_page') }}"><h3>{{ t('nav.denoise') }}</h3><p class="muted">{{ t('home.dn.card') }}</p><span class="more">{{ t('home.open') }} →</span></a>
+  </div>
 </section>
 
-<div class="two">
+<div class="section grid-2">
   <section aria-labelledby="hcom">
     <div class="section-head"><h2 id="hcom">{{ t('home.community') }}</h2><a href="{{ url_for('community') }}">{{ t('gen.more') }} →</a></div>
-    <ul class="plain posts">{% for p in posts %}{{ post_item(p) }}{% else %}<li class="muted">{{ t('com.empty') }}</li>{% endfor %}</ul>
+    <ul class="compact-list">{% for p in posts %}{{ post_item(p) }}{% else %}<li class="muted">{{ t('com.empty') }}</li>{% endfor %}</ul>
   </section>
   <section aria-labelledby="hblog">
     <div class="section-head"><h2 id="hblog">{{ t('home.blog') }}</h2><a href="{{ url_for('blog') }}">{{ t('gen.more') }} →</a></div>
-    <ul class="plain posts">{% for b in blog %}<li><a href="{{ url_for('blog_post', slug=b.slug) }}">{{ b.title }}</a> <span class="muted">{{ b.date }}</span></li>{% endfor %}</ul>
+    <ul class="compact-list">{% for b in blog %}<li><a href="{{ url_for('blog_post', slug=b.slug) }}">{{ b.title }}</a><span class="meta">{{ b.date }}</span></li>{% endfor %}</ul>
   </section>
 </div>
 {% endblock %}

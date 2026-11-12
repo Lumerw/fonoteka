@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ code }}{% endblock %}
 {% block content %}
-<h1>{{ code }}</h1>
+<header class="page-head"><h1>{{ code }}</h1></header>
 <p>{% if code==404 %}Nie znaleziono strony.{% elif code==403 %}Brak dostępu.{% elif code==413 %}Plik jest za duży (maks. 60 MB).{% endif %}</p>
 <p><a href="{{ url_for('home') }}">{{ t('nav.home') }}</a></p>
 {% endblock %}

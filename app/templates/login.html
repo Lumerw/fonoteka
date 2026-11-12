@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}{{ t('nav.login') }}{% endblock %}
 {% block content %}
-<div class="narrow">
-<h1>{{ t('nav.login') }}</h1>
-<form method="post" class="card form">
-  <input type="hidden" name="csrf" value="{{csrf}}">
-  <p><label for="email">{{ t('acc.email') }}</label><input id="email" name="email" type="email" autocomplete="email" required></p>
-  <p><label for="password">{{ t('acc.password') }}</label><input id="password" name="password" type="password" autocomplete="current-password" required></p>
-  <p><button class="btn">{{ t('acc.login') }}</button></p>
-</form>
-<p>{{ t('acc.no_account') }} <a href="{{ url_for('register') }}">{{ t('nav.register') }}</a></p>
-<p class="muted">{{ t('acc.why') }}</p>
+<div class="auth">
+  <div>
+    <h1>{{ t('nav.login') }}</h1>
+    <form method="post" class="card">
+      <input type="hidden" name="csrf" value="{{csrf}}">
+      <div class="field"><label for="email">{{ t('acc.email') }}</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="password">{{ t('acc.password') }}</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+      <button class="btn block">{{ t('acc.login') }}</button>
+    </form>
+    <p style="margin-top:20px">{{ t('acc.no_account') }} <a href="{{ url_for('register') }}">{{ t('nav.register') }}</a></p>
+  </div>
+  {% include '_benefits.html' %}
 </div>
 {% endblock %}

@@ -2,7 +2,8 @@
 {% block title %}{{ t('job.title') }}{% endblock %}
 {% block content %}
 <nav class="crumbs"><a href="{{ url_for('separator') }}">{{ t('nav.separator') }}</a> / {{ j.filename }}</nav>
-<h1>{{ t('job.title') }}: {{ j.filename }}</h1>
+<header class="page-head" style="padding-top:24px"><p class="eyebrow">{{ t('dn.kind.' ~ j.kind) }}</p><h1>{{ j.filename }}</h1></header>
+<div class="prose stack" style="max-width:760px">
 {% if j.status in ('queued','running') %}
 <div id="progress" data-api="{{ url_for('job_api', jid=j.id) }}">
   <progress max="100" value="{{ j.progress }}" aria-describedby="pmsg"></progress>
@@ -42,9 +43,9 @@ document.querySelectorAll('.ab').forEach(el => { const au = el.querySelector('au
 {% elif j.status=='done' %}
 <p>{{ t('sep.expires') }}: {{ j.expires[:16].replace('T',' ') }}.</p>
 <h2>{{ t('tr.original') }}</h2>
-<audio controls src="{{ url_for('job_file', jid=j.id, name='podglad.mp3') }}"></audio>
+<audio controls style="margin-bottom:24px" src="{{ url_for('job_file', jid=j.id, name='podglad.mp3') }}"></audio>
 <h2>{{ t('tr.mixer') }}</h2>
-{% set stems = [('wokal','Wokal', url_for('job_file', jid=j.id, name='wokal.mp3')), ('rytm','Rytm', url_for('job_file', jid=j.id, name='rytm.mp3')), ('melodia','Melodia', url_for('job_file', jid=j.id, name='melodia.mp3'))] %}
+{% set stems = [('wokal','Wokal','głos', url_for('job_file', jid=j.id, name='wokal.mp3')), ('rytm','Rytm','perkusja i bas', url_for('job_file', jid=j.id, name='rytm.mp3')), ('melodia','Melodia','pozostałe instrumenty', url_for('job_file', jid=j.id, name='melodia.mp3'))] %}
 {% include '_mixer.html' %}
 <h2>{{ t('tr.download') }}</h2>
 <div class="dl-grid">
@@ -54,5 +55,6 @@ document.querySelectorAll('.ab').forEach(el => { const au = el.querySelector('au
 </div>
 <details class="box"><summary>{{ t('tr.ai') }}</summary><pre>{{ meta|tojson(indent=1) }}</pre></details>
 {% else %}<p class="muted">—</p>{% endif %}
+</div>
 {% endblock %}
 {% block scripts %}<script src="{{ url_for('static', filename='mixer.js') }}"></script>{% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{ {'regulamin': t('ft.terms'), 'prywatnosc': t('ft.privacy'), 'dostepnosc': t('ft.a11y')}[name] }}{% endblock %}
 {% block content %}
-<article class="prose">
+<article class="prose" style="padding-top:48px">
 {% if name=='regulamin' %}
 <h1>{{ t('ft.terms') }}</h1>
 <p class="flash">Szkic do opracowania przez prawnika. Nie jest to obowiązujący regulamin.</p>

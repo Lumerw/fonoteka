@@ -1,7 +1,7 @@
 {% extends 'base.html' %}{% from '_macros.html' import status_badge with context %}
 {% block title %}{{ t('nav.admin') }}{% endblock %}
 {% block content %}
-<h1>{{ t('nav.admin') }}</h1>
+<header class="page-head"><h1>{{ t('nav.admin') }}</h1></header>
 <p class="muted">Konta: {{ stats.users }} · pobrania: {{ stats.downloads }} · zadania separacji: {{ stats.jobs }}</p>
 <p><a class="btn" href="{{ url_for('admin_track', tid=None) }}">+ Dodaj utwór</a></p>
 <h2>Utwory</h2>
@@ -21,8 +21,8 @@
 
 <h2>Kandydaci do weryfikacji prawnej ({{ cands|length }})</h2>
 <p class="muted">Wstępna lista dla prawnika – szczegóły w pliku docs/kandydaci-domena-publiczna.md.</p>
-<table class="list small">
+<div class="table-wrap"><table class="list small">
   <thead><tr><th scope="col">Utwór</th><th scope="col">Muzyka</th><th scope="col">Słowa</th><th scope="col">Nagranie</th><th scope="col">Status wstępny</th><th scope="col">Uwagi</th></tr></thead>
   <tbody>{% for c in cands %}<tr><td>{% if c.source %}<a href="{{ c.source }}" rel="noopener">{{ c.title }}</a>{% else %}{{ c.title }}{% endif %}</td><td>{{ c.composer }}</td><td>{{ c.lyricist }}</td><td>{{ c.recording }}</td><td>{{ c.status }}</td><td>{{ c.note }}</td></tr>{% endfor %}</tbody>
-</table>
+</table></div>
 {% endblock %}

@@ -1,10 +1,10 @@
-<fieldset>
-  <legend>{{ t('dn.preset') }}</legend>
-  {% if allow_none %}<p><label><input type="radio" name="preset" value=""> {{ t('dn.none') }}</label></p>{% endif %}
-  {% for k,p in presets.items() %}<p><label><input type="radio" name="preset" value="{{k}}" {% if k=='szelak' %}checked{% endif %}> {{ p.label }}</label></p>{% endfor %}
-</fieldset>
-<fieldset>
-  <legend>{{ t('dn.strength') }}</legend>
-  {% for v in [1,2,3] %}<label class="inline-opt"><input type="radio" name="strength" value="{{v}}" {% if v==2 %}checked{% endif %}> {{ t('dn.s' ~ v) }}</label>{% endfor %}
-  <p><label><input type="checkbox" name="hum" value="1"> {{ t('dn.hum') }}</label></p>
-</fieldset>
+<div class="option-cards" role="radiogroup" aria-label="{{ t('dn.preset') }}">
+  {% for k,p in presets.items() %}
+  <label class="option-card"><input type="radio" name="preset" value="{{k}}" {% if k=='szelak' %}checked{% endif %}>
+    <span><strong>{{ p.label }}</strong><span>{{ t('dn.desc.' ~ k) }}</span></span></label>
+  {% endfor %}
+  {% if allow_none %}
+  <label class="option-card"><input type="radio" name="preset" value="">
+    <span><strong>{{ t('dn.none') }}</strong><span>{{ t('dn.desc.none') }}</span></span></label>
+  {% endif %}
+</div>

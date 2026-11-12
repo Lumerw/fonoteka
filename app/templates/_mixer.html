@@ -1,21 +1,18 @@
-{# stems: lista (klucz, etykieta, url) #}
+{# stems: lista (klucz, etykieta, opis, url) #}
 <div class="mixer" data-stems='{{ stems|tojson }}' data-l-play="{{ t('tr.play') }}" data-l-pause="{{ t('tr.pause') }}">
   <div class="mixer-transport">
-    <button type="button" class="btn mx-play" disabled>{{ t('tr.loading') }}</button>
+    <button type="button" class="btn mx-play" disabled aria-label="{{ t('tr.loading') }}">…</button>
     <input type="range" class="mx-seek" min="0" max="1000" value="0" aria-label="Pozycja" disabled>
-    <span class="mx-time" aria-live="off">0:00</span>
+    <span class="mx-time">0:00</span>
   </div>
-  <table class="mx-tracks">
-    <thead><tr><th scope="col">Ścieżka</th><th scope="col">{{ t('tr.mute') }}</th><th scope="col">{{ t('tr.solo') }}</th><th scope="col">{{ t('tr.volume') }}</th></tr></thead>
-    <tbody>
-    {% for key,label,url in stems %}
-      <tr data-key="{{ key }}">
-        <th scope="row">{{ label }}</th>
-        <td><input type="checkbox" class="mx-mute" aria-label="{{ t('tr.mute') }}: {{ label }}"></td>
-        <td><input type="checkbox" class="mx-solo" aria-label="{{ t('tr.solo') }}: {{ label }}"></td>
-        <td><input type="range" class="mx-vol" min="0" max="100" value="100" aria-label="{{ t('tr.volume') }}: {{ label }}"></td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+  <ul class="mx-rows">
+  {% for key,label,desc,url in stems %}
+    <li class="mx-row" data-key="{{ key }}">
+      <div class="name">{{ label }}<span>{{ desc }}</span></div>
+      <button type="button" class="toggle mx-mute" aria-pressed="false" aria-label="{{ t('tr.mute') }}: {{ label }}">{{ t('tr.mute') }}</button>
+      <button type="button" class="toggle mx-solo" aria-pressed="false" aria-label="{{ t('tr.solo') }}: {{ label }}">{{ t('tr.solo') }}</button>
+      <input type="range" class="mx-vol" min="0" max="100" value="100" aria-label="{{ t('tr.volume') }}: {{ label }}">
+    </li>
+  {% endfor %}
+  </ul>
 </div>

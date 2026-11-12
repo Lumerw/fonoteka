@@ -1,0 +1,7 @@
+<div class="field">
+  <span class="label" id="lbl-strength">{{ t('dn.strength') }}</span>
+  <div class="segmented" role="radiogroup" aria-labelledby="lbl-strength">
+    {% for v in [1,2,3] %}<label><input type="radio" name="strength" value="{{v}}" {% if v==2 %}checked{% endif %}>{{ t('dn.s' ~ v) }}</label>{% endfor %}
+  </div>
+</div>
+<label class="check"><input type="checkbox" name="hum" value="1"><span>{{ t('dn.hum') }}</span></label>

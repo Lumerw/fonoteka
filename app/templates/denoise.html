@@ -1,19 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}{{ t('dn.title') }}{% endblock %}
 {% block content %}
-<h1>{{ t('dn.title') }}</h1>
-<p class="lead">{{ t('dn.lead') }}</p>
-{% if me %}
-<form method="post" enctype="multipart/form-data" class="card form">
-  <input type="hidden" name="csrf" value="{{csrf}}">
-  <p><label for="audio">{{ t('sep.file') }}</label><input id="audio" name="audio" type="file" accept="audio/*,.flac" required></p>
-  {% set allow_none = false %}{% include '_denoise_opts.html' %}
-  <p><label><input type="checkbox" name="rights" value="1" required> {{ t('sep.rights') }}</label></p>
-  <p><button class="btn">{{ t('dn.submit') }}</button></p>
-</form>
-{% else %}
-<p class="box">{{ t('sep.login') }} <a class="btn small" href="{{ url_for('login', next='/odszumianie') }}">{{ t('nav.login') }}</a></p>
-{% endif %}
-<section class="box"><h2>{{ t('dn.how') }}</h2><p>{{ t('dn.how.d') }}</p></section>
-{% if jobs %}<h2>{{ t('sep.mine') }}</h2>{% include '_jobs.html' %}{% endif %}
+<header class="page-head">
+  <h1>{{ t('dn.title') }}</h1>
+  <p class="lead">{{ t('home.dn.card') }}</p>
+</header>
+<div class="with-aside">
+  <div>{% set tool='dn' %}{% include '_tool_form.html' %}</div>
+  <aside class="aside">
+    <div class="card"><h2>{{ t('sep.get') }}</h2><ul class="checklist"><li>{{ t('dn.get.1') }}</li><li>{{ t('dn.get.2') }}</li><li>{{ t('dn.get.3') }}</li><li>{{ t('sep.get.3') }}</li></ul></div>
+    <div class="card soft"><h2>{{ t('dn.how') }}</h2><p class="small">{{ t('dn.how.d') }}</p></div>
+  </aside>
+</div>
+{% if jobs %}<section class="section"><div class="section-head"><h2>{{ t('sep.mine') }}</h2></div><div class="table-wrap">{% include '_jobs.html' %}</div></section>{% endif %}
 {% endblock %}

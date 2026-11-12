@@ -13,19 +13,15 @@
 <header class="site">
   <div class="wrap bar">
     <a class="logo" href="{{ url_for('home') }}">Fonoteka</a>
-    <nav aria-label="Menu główne">
+    {% set nav = [('catalog', t('nav.catalog'), ('catalog','track')), ('separator', t('nav.separator'), ('separator','job')), ('denoise_page', t('nav.denoise'), ('denoise_page',)), ('community', t('nav.community'), ('community','post')), ('blog', t('nav.blog'), ('blog','blog_post')), ('about', t('nav.about'), ('about',))] %}
+    <nav aria-label="{{ t('nav.menu') }}">
       <ul class="menu">
-        <li><a href="{{ url_for('catalog') }}" {% if request.endpoint in ('catalog','track') %}aria-current="page"{% endif %}>{{ t('nav.catalog') }}</a></li>
-        <li><a href="{{ url_for('separator') }}" {% if request.endpoint in ('separator','job') %}aria-current="page"{% endif %}>{{ t('nav.separator') }}</a></li>
-        <li><a href="{{ url_for('denoise_page') }}" {% if request.endpoint=='denoise_page' %}aria-current="page"{% endif %}>{{ t('nav.denoise') }}</a></li>
-        <li><a href="{{ url_for('community') }}" {% if request.endpoint in ('community','post') %}aria-current="page"{% endif %}>{{ t('nav.community') }}</a></li>
-        <li><a href="{{ url_for('blog') }}" {% if request.endpoint in ('blog','blog_post') %}aria-current="page"{% endif %}>{{ t('nav.blog') }}</a></li>
-        <li><a href="{{ url_for('about') }}" {% if request.endpoint=='about' %}aria-current="page"{% endif %}>{{ t('nav.about') }}</a></li>
+        {% for ep,label,eps in nav %}<li><a href="{{ url_for(ep) }}" {% if request.endpoint in eps %}aria-current="page"{% endif %}>{{ label }}</a></li>{% endfor %}
       </ul>
     </nav>
     <div class="account">
       {% if static_demo %}
-      <nav class="lang" aria-label="{{ t('nav.lang') }}">{% for k,v in LANGS.items() %}<a href="{{ ('' if k=='pl' else '/' ~ k) ~ request.path }}" lang="{{k}}" {% if k==L %}aria-current="true"{% endif %}>{{ k|upper }}</a> {% endfor %}</nav>
+      <nav class="lang" aria-label="{{ t('nav.lang') }}">{% for k,v in LANGS.items() %}<a href="{{ ('' if k=='pl' else '/' ~ k) ~ request.path }}" lang="{{k}}" {% if k==L %}aria-current="true"{% endif %}>{{ k|upper }}</a>{% endfor %}</nav>
       {% else %}
       <form class="lang" method="get" action="">
         <label for="lang" class="sr">{{ t('nav.lang') }}</label>
@@ -35,35 +31,60 @@
         <noscript><button>OK</button></noscript>
       </form>
       {% endif %}
+      <span class="desk actions">
       {% if me %}
         {% if me.role=='admin' %}<a href="{{ url_for('admin') }}">{{ t('nav.admin') }}</a>{% endif %}
         <a class="btn small" href="{{ url_for('panel') }}">{{ t('nav.panel') }}</a>
-        <form method="post" action="{{ url_for('logout') }}" class="inline"><input type="hidden" name="csrf" value="{{csrf}}"><button class="link">{{ t('nav.logout') }}</button></form>
       {% else %}
         <a href="{{ url_for('login') }}">{{ t('nav.login') }}</a>
         <a class="btn small" href="{{ url_for('register') }}">{{ t('nav.register') }}</a>
       {% endif %}
+      </span>
+      <details class="mobile-menu">
+        <summary>{{ t('nav.menu') }}</summary>
+        <div class="mobile-panel">
+          <ul>{% for ep,label,eps in nav %}<li><a href="{{ url_for(ep) }}" {% if request.endpoint in eps %}aria-current="page"{% endif %}>{{ label }}</a></li>{% endfor %}</ul>
+          <div class="acc">
+          {% if me %}<a class="btn small" href="{{ url_for('panel') }}">{{ t('nav.panel') }}</a>
+          {% else %}<a class="btn small secondary" href="{{ url_for('login') }}">{{ t('nav.login') }}</a><a class="btn small" href="{{ url_for('register') }}">{{ t('nav.register') }}</a>{% endif %}
+          </div>
+        </div>
+      </details>
     </div>
   </div>
 </header>
 {% if static_demo %}<div class="demo-bar"><div class="wrap">{{ t('demo.bar') }}</div></div>{% endif %}
 <main id="tresc" class="wrap">
-  {% with msgs = get_flashed_messages() %}{% if msgs %}<div class="flash" role="status">{% for m in msgs %}<p>{{ m }}</p>{% endfor %}</div>{% endif %}{% endwith %}
+  {% with msgs = get_flashed_messages() %}{% if msgs %}<div class="flash" role="status" style="margin-top:24px">{% for m in msgs %}<p>{{ m }}</p>{% endfor %}</div>{% endif %}{% endwith %}
   {% block content %}{% endblock %}
 </main>
+<script src="{{ url_for('static', filename='ui.js') }}" defer></script>
 <footer class="site">
-  <div class="wrap cols">
-    <div>
-      <p><strong>Fonoteka</strong> – {{ t('ft.free') }}</p>
-      <p>{{ t('ft.pd') }}</p>
-      <p class="muted">{{ t('ft.proto') }}</p>
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <strong>Fonoteka</strong>
+      <p>{{ t('ft.mission') }}</p>
+      <p>{{ t('ft.free') }} {{ t('ft.pd') }}</p>
+      <p>{{ t('ft.proto') }}</p>
     </div>
-    <ul class="plain">
-      <li><a href="{{ url_for('page', name='regulamin') }}">{{ t('ft.terms') }}</a></li>
-      <li><a href="{{ url_for('page', name='prywatnosc') }}">{{ t('ft.privacy') }}</a></li>
-      <li><a href="{{ url_for('page', name='dostepnosc') }}">{{ t('ft.a11y') }}</a></li>
-      <li><a href="{{ url_for('about') }}">{{ t('nav.about') }}</a></li>
-    </ul>
+    <div>
+      <h2>{{ t('ft.project') }}</h2>
+      <ul>
+        <li><a href="{{ url_for('catalog') }}">{{ t('nav.catalog') }}</a></li>
+        <li><a href="{{ url_for('separator') }}">{{ t('nav.separator') }}</a></li>
+        <li><a href="{{ url_for('denoise_page') }}">{{ t('nav.denoise') }}</a></li>
+        <li><a href="{{ url_for('community') }}">{{ t('nav.community') }}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>{{ t('ft.info') }}</h2>
+      <ul>
+        <li><a href="{{ url_for('about') }}">{{ t('nav.about') }}</a></li>
+        <li><a href="{{ url_for('page', name='regulamin') }}">{{ t('ft.terms') }}</a></li>
+        <li><a href="{{ url_for('page', name='prywatnosc') }}">{{ t('ft.privacy') }}</a></li>
+        <li><a href="{{ url_for('page', name='dostepnosc') }}">{{ t('ft.a11y') }}</a></li>
+      </ul>
+    </div>
   </div>
 </footer>
 {% block scripts %}{% endblock %}

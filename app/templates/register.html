@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}{{ t('nav.register') }}{% endblock %}
 {% block content %}
-<div class="narrow">
-<h1>{{ t('acc.register') }}</h1>
-<p>{{ t('acc.why') }}</p>
-<form method="post" class="card form">
-  <input type="hidden" name="csrf" value="{{csrf}}">
-  <p><label for="name">{{ t('acc.name') }}</label><input id="name" name="name" autocomplete="nickname"></p>
-  <p><label for="email">{{ t('acc.email') }}</label><input id="email" name="email" type="email" autocomplete="email" required></p>
-  <p><label for="password">{{ t('acc.password') }}</label><input id="password" name="password" type="password" minlength="8" autocomplete="new-password" required></p>
-  <p><label for="profile">{{ t('acc.role') }}</label>
-    <select id="profile" name="profile"><option value="">—</option><option>kompozytor / producent</option><option>muzyk</option><option>student</option><option>archiwista / bibliotekarz</option><option>badacz</option><option>słuchacz</option><option>branża filmu i gier</option></select></p>
-  <p><label><input type="checkbox" name="terms" value="1" required> {{ t('acc.terms') }} <a href="{{ url_for('page', name='regulamin') }}">{{ t('ft.terms') }}</a>, <a href="{{ url_for('page', name='prywatnosc') }}">{{ t('ft.privacy') }}</a></label></p>
-  <p><button class="btn">{{ t('acc.register') }}</button></p>
-</form>
-<p>{{ t('acc.have_account') }} <a href="{{ url_for('login') }}">{{ t('nav.login') }}</a></p>
+<div class="auth">
+  <div>
+    <h1>{{ t('acc.register') }}</h1>
+    <form method="post" class="card">
+      <input type="hidden" name="csrf" value="{{csrf}}">
+      <div class="field"><label for="name">{{ t('acc.name') }}</label><input id="name" name="name" autocomplete="nickname"></div>
+      <div class="field"><label for="email">{{ t('acc.email') }}</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="password">{{ t('acc.password') }}</label><input id="password" name="password" type="password" minlength="8" autocomplete="new-password" required><span class="hint">{{ t('acc.short') }}</span></div>
+      <div class="field"><label for="profile">{{ t('acc.role') }}</label>
+        <select id="profile" name="profile"><option value="">—</option><option>kompozytor / producent</option><option>muzyk</option><option>student</option><option>archiwista / bibliotekarz</option><option>badacz</option><option>słuchacz</option><option>branża filmu i gier</option></select></div>
+      <label class="check" style="margin-bottom:24px"><input type="checkbox" name="terms" value="1" required><span>{{ t('acc.terms') }} <a href="{{ url_for('page', name='regulamin') }}">{{ t('ft.terms') }}</a> · <a href="{{ url_for('page', name='prywatnosc') }}">{{ t('ft.privacy') }}</a></span></label>
+      <button class="btn block">{{ t('acc.register') }}</button>
+    </form>
+    <p style="margin-top:20px">{{ t('acc.have_account') }} <a href="{{ url_for('login') }}">{{ t('nav.login') }}</a></p>
+  </div>
+  {% include '_benefits.html' %}
 </div>
 {% endblock %}

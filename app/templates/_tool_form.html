@@ -1,0 +1,32 @@
+{# wspólny formularz narzędzia; zmienne: tool ('sep'|'dn'), action #}
+{% if not me %}
+<div class="card soft locked">
+  <p>{{ t('gen.login_cta') }}</p>
+  <div class="actions"><a class="btn" href="{{ url_for('login', next=request.path) }}">{{ t('nav.login') }}</a><a class="btn secondary" href="{{ url_for('register') }}">{{ t('nav.register') }}</a></div>
+</div>
+{% endif %}
+<form method="post" enctype="multipart/form-data" class="card">
+  <input type="hidden" name="csrf" value="{{csrf}}">
+  <fieldset {% if not me %}disabled{% endif %} style="margin:0">
+  <ol class="form-steps">
+    <li>
+      <h3>{{ t('sep.step.file') }}</h3>
+      <label class="dropzone" for="audio"><strong>{{ t('sep.file') }}</strong><span class="muted small">FLAC · WAV · MP3 · {{ 'do 5 min · ' if tool=='sep' }}do 60 MB</span>
+        <input id="audio" name="audio" type="file" accept="audio/*,.flac" required></label>
+    </li>
+    <li>
+      <h3>{{ t('sep.step.medium') if tool=='sep' else t('dn.step.medium') }}</h3>
+      {% set allow_none = (tool=='sep') %}{% include '_denoise_opts.html' %}
+    </li>
+    {% if tool=='dn' %}
+    <li><h3>{{ t('dn.step.strength') }}</h3>{% include '_strength.html' %}</li>
+    {% endif %}
+    <li>
+      <h3>{{ t('sep.step.go') }}</h3>
+      {% if tool=='sep' %}<details class="disclosure" style="margin-bottom:16px"><summary>{{ t('dn.step.strength') }}</summary>{% include '_strength.html' %}</details>{% endif %}
+      <label class="check" style="margin-bottom:20px"><input type="checkbox" name="rights" value="1" required><span>{{ t('sep.rights') }}</span></label>
+      <button class="btn">{{ t('sep.submit') if tool=='sep' else t('dn.submit') }}</button>
+    </li>
+  </ol>
+  </fieldset>
+</form>
