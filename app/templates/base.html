@@ -20,17 +20,14 @@
       </ul>
     </nav>
     <div class="account">
-      {% if static_demo %}
-      <nav class="lang" aria-label="{{ t('nav.lang') }}">{% for k,v in LANGS.items() %}<a href="{{ ('' if k=='pl' else '/' ~ k) ~ request.path }}" lang="{{k}}" {% if k==L %}aria-current="true"{% endif %}>{{ k|upper }}</a>{% endfor %}</nav>
-      {% else %}
-      <form class="lang" method="get" action="">
-        <label for="lang" class="sr">{{ t('nav.lang') }}</label>
-        <select id="lang" name="lang" onchange="this.form.submit()">
-          {% for k,v in LANGS.items() %}<option value="{{k}}" {% if k==L %}selected{% endif %}>{{ k|upper }}</option>{% endfor %}
-        </select>
-        <noscript><button>OK</button></noscript>
-      </form>
-      {% endif %}
+      <details class="dropdown lang-menu">
+        <summary aria-label="{{ t('nav.lang') }}: {{ LANGS[L] }}"><span>{{ L|upper }}</span></summary>
+        <ul class="dropdown-list" role="list">
+          {% for k,v in LANGS.items() %}
+          <li><a href="{{ (('' if k=='pl' else '/' ~ k) ~ request.path) if static_demo else ('?lang=' ~ k) }}" lang="{{k}}" hreflang="{{k}}" {% if k==L %}aria-current="true"{% endif %}><span class="code">{{ k|upper }}</span>{{ v }}</a></li>
+          {% endfor %}
+        </ul>
+      </details>
       <span class="desk actions">
       {% if me %}
         {% if me.role=='admin' %}<a href="{{ url_for('admin') }}">{{ t('nav.admin') }}</a>{% endif %}
@@ -58,6 +55,7 @@
   {% with msgs = get_flashed_messages() %}{% if msgs %}<div class="flash" role="status" style="margin-top:24px">{% for m in msgs %}<p>{{ m }}</p>{% endfor %}</div>{% endif %}{% endwith %}
   {% block content %}{% endblock %}
 </main>
+<script>window.FONO = {{ {'play': t('tr.play'), 'pause': t('tr.pause'), 'choose': t('gen.choose_file'), 'drop': t('gen.drop_here'), 'position': t('gen.position')}|tojson }};</script>
 <script src="{{ url_for('static', filename='ui.js') }}" defer></script>
 <footer class="site">
   <div class="wrap foot-grid">

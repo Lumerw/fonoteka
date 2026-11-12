@@ -716,5 +716,6 @@ def e413(e):
 
 init_db()
 if __name__ == "__main__":
-    threading.Thread(target=worker, daemon=True).start()
+    if not os.environ.get("FONO_NO_WORKER"):  # np. gdy inny proces przetwarza katalog
+        threading.Thread(target=worker, daemon=True).start()
     app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5055)), debug=False, threaded=True)

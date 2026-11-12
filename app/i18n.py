@@ -181,6 +181,9 @@ S = {
     "acc.b3": ("Separator i odszumianie własnych nagrań", "Separator and denoising for your recordings", "Сепаратор і очищення власних записів"),
     "acc.b4": ("Biblioteka i udział w społeczności", "A library and community participation", "Бібліотека та участь у спільноті"),
     "acc.free": ("Konto jest bezpłatne.", "The account is free.", "Акаунт безкоштовний."),
+    "gen.choose_file": ("Wybierz plik", "Choose file", "Вибрати файл"),
+    "gen.drop_here": ("lub przeciągnij go tutaj", "or drag it here", "або перетягніть його сюди"),
+    "gen.position": ("Pozycja odtwarzania", "Playback position", "Позиція відтворення"),
     # wersja demonstracyjna (statyczna)
     "demo.bar": ("Wersja demonstracyjna prototypu: odsłuch, mikser ścieżek, karty prawne i nuty działają. Konta, pobieranie, separator i odszumianie działają w pełnej wersji z serwerem.", "Prototype demo: listening, the stem mixer, legal cards and sheet music work. Accounts, downloads, the separator and denoising run in the full server version.", "Демо-версія прототипу: прослуховування, мікшер доріжок, правові картки та ноти працюють. Акаунти, завантаження, сепаратор і очищення працюють у повній версії із сервером."),
     "demo.form": ("W wersji demonstracyjnej formularz jest wyłączony.", "This form is disabled in the demo.", "У демо-версії форма вимкнена."),

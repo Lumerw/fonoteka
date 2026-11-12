@@ -34,12 +34,12 @@ document.querySelectorAll('.mixer').forEach(async (el) => {
   };
   const pause = () => { offset = ctx.currentTime - startAt; stop(); playing = false; setBtn(); };
   playBtn.addEventListener('click', () => (playing ? pause() : play()));
-  seek.addEventListener('input', () => { offset = (seek.value / 1000) * duration; if (playing) play(); time.textContent = `${fmt(offset)} / ${fmt(duration)}`; });
+  seek.addEventListener('input', () => { window.fonoPaintRange && window.fonoPaintRange(seek); offset = (seek.value / 1000) * duration; if (playing) play(); time.textContent = `${fmt(offset)} / ${fmt(duration)}`; });
   (function tick() {
     if (playing) {
       const pos = ctx.currentTime - startAt;
       if (pos >= duration) { pause(); offset = 0; }
-      else { seek.value = (pos / duration) * 1000; time.textContent = `${fmt(pos)} / ${fmt(duration)}`; }
+      else { seek.value = (pos / duration) * 1000; window.fonoPaintRange && window.fonoPaintRange(seek); time.textContent = `${fmt(pos)} / ${fmt(duration)}`; }
     }
     requestAnimationFrame(tick);
   })();
