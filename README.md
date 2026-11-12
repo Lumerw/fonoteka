@@ -39,11 +39,43 @@ Dostępne jako osobne narzędzie (`/odszumianie`, odsłuch przed/po) i jako krok
 
 ## Wersja demonstracyjna na Cloudflare
 
-Adres: https://fonoteka.teraz-platforma.workers.dev (domyślna domena Cloudflare; własną domenę podpinamy później w panelu Cloudflare → Workers → fonoteka → Domains).
+Adres główny: **https://fonoteka-pl.pages.dev** (Cloudflare Pages połączone z repozytorium GitHub `Lumerw/fonoteka`; nazwa `fonoteka.pages.dev` była już zajęta).
+Stary adres https://fonoteka.teraz-platforma.workers.dev (Workers, ręczny `npx wrangler deploy`) nadal działa, ale nie aktualizuje się sam.
+
+### Jak działa automatyczne wdrożenie
+
+Cloudflare Pages nie ma dostępu do bazy (`data/`) ani nagrań (`media/`), więc **nic nie buduje** – publikuje gotowy katalog `dist/`, który jest w repozytorium.
+Ustawienia projektu `fonoteka-pl`: gałąź produkcyjna `main`, framework *None*, bez komendy build, katalog wyjściowy `dist`.
 
 ```bash
-.venv/bin/python app/export_static.py      # buduje dist/ (PL, /en, /uk)
-npx wrangler deploy                        # konfiguracja w wrangler.jsonc
+.venv/bin/python app/export_static.py      # 1. buduje dist/ (PL, /en, /uk) – tylko utwory opublikowane
+git add dist && git commit -m "Aktualizacja wersji demo"   # 2. commit gotowej strony
+git push                                    # 3. push na main → Pages wdraża sam (ok. 1 min)
+```
+
+- Status wdrożeń: panel Cloudflare → Workers & Pages → `fonoteka-pl` → Deployments, albo `npx wrangler pages deployment list --project-name fonoteka-pl`.
+- Push na inną gałąź tworzy wersję podglądową pod adresem `<gałąź>.fonoteka-pl.pages.dev` (produkcja się nie zmienia).
+- Limity: pojedynczy plik ≤ 25 MB (Pages), ≤ 100 MB (GitHub), do 20 000 plików. Obecnie `dist/` ma ok. 120 MB i pliki MP3 do ~3,5 MB.
+- Nagłówki (`X-Robots-Tag: noindex`) są w `dist/_headers`, strona błędu w `dist/404.html` – oba generuje `export_static.py`.
+- `wrangler.jsonc` dotyczy tylko starego wdrożenia Workers; Pages go pomija.
+
+### Własna domena (np. fonoteka.org) – po zakupie
+
+1. Cloudflare → Workers & Pages → `fonoteka-pl` → **Custom domains** → *Set up a custom domain* → wpisz `fonoteka.org` (i osobno `www.fonoteka.org`).
+2. DNS:
+   - **Domena przeniesiona do Cloudflare (zalecane, wymagane dla domeny głównej bez `www`)**: Cloudflare → *Add a domain* → u rejestratora zmień serwery nazw na te podane przez Cloudflare. Po aktywacji strefy Pages sam doda rekordy, a certyfikat HTTPS wystawi się automatycznie.
+   - **DNS zostaje u rejestratora**: da się podpiąć tylko subdomenę (np. `www.fonoteka.org`) – dodaj u rejestratora rekord `CNAME www → fonoteka-pl.pages.dev` i dopiero potem zatwierdź domenę w Pages. Domeny głównej (apex) w ten sposób nie podepniesz.
+3. Przekierowania na nową domenę:
+   - `fonoteka-pl.pages.dev` → domena: Cloudflare → *Rules* → *Bulk Redirects* (lista: `fonoteka-pl.pages.dev` → `https://fonoteka.org`, 301, z zachowaniem ścieżki i parametrów). Nie przekierowuj adresów podglądowych `*.fonoteka-pl.pages.dev`.
+   - `www` → domena główna: reguła *Redirect Rules* w strefie `fonoteka.org`.
+   - Stary adres Workers: najprościej usunąć projekt Workers `fonoteka` (panel → Workers & Pages → `fonoteka` → Settings → Delete) albo podmienić go na Worker zwracający `301` na nową domenę.
+4. Zaktualizuj adres w README i we wniosku. Gdy prawnik potwierdzi status nagrań i strona ma być indeksowana – usuń `X-Robots-Tag` i `Disallow` z `export_static.py`.
+
+### Ręcznie, bez GitHuba (stara metoda)
+
+```bash
+.venv/bin/python app/export_static.py
+npx wrangler deploy                        # Workers: fonoteka.teraz-platforma.workers.dev (wrangler.jsonc)
 ```
 
 Wersja statyczna: odsłuch, mikser, karty prawne, nuty, blog, społeczność (do czytania). Formularze są wyłączone. Strona ma `noindex` do czasu opinii prawnej o redystrybucji plików. Pełna aplikacja (konta, pobieranie, separator, odszumianie) wymaga serwera z Pythonem i FFmpeg – Cloudflare Pages/Workers jej nie uruchomi.
