@@ -1,0 +1,66 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_badge with context %}
+{% block title %}{{ t('nav.panel') }}{% endblock %}
+{% block content %}
+<header class="panel-head">
+  <h1>{{ t('pn.hello') }}, {{ me.name }}</h1>
+  <p class="muted">{{ lib|length }} · {{ dls|length }} · {{ posts|length }} — {{ t('pn.stats') }}</p>
+</header>
+<nav class="tabs" aria-label="Panel">
+  <a href="#biblioteka">{{ t('pn.library') }}</a><a href="#pobrania">{{ t('pn.downloads') }}</a><a href="#separacje">{{ t('pn.separations') }}</a><a href="#aktywnosc">{{ t('pn.activity') }}</a><a href="#ustawienia">{{ t('pn.settings') }}</a>
+</nav>
+
+<section id="biblioteka" aria-labelledby="h-lib">
+  <h2 id="h-lib">{{ t('pn.library') }}</h2>
+  {% if lib %}
+  <ul class="tracks">
+  {% for tr in lib %}
+    <li class="track-row">
+      <a href="{{ url_for('track', slug=tr.slug) }}"><strong>{{ tr.title }}</strong></a>
+      <span class="muted">{{ tr.composer }} · {{ tr.performer }}</span>
+      <audio controls preload="none" src="{{ url_for('track_media', slug=tr.slug, name='podglad.mp3') }}" aria-label="{{ tr.title }}"></audio>
+      <form method="post" action="{{ url_for('toggle_save', slug=tr.slug) }}" class="inline"><input type="hidden" name="csrf" value="{{csrf}}"><input type="hidden" name="next" value="{{ url_for('panel') }}"><button class="link">{{ t('tr.unsave') }}</button></form>
+    </li>
+  {% endfor %}
+  </ul>
+  {% else %}<p class="muted">{{ t('pn.library.empty') }} <a href="{{ url_for('catalog') }}">{{ t('nav.catalog') }} →</a></p>{% endif %}
+</section>
+
+<section id="pobrania" aria-labelledby="h-dl">
+  <h2 id="h-dl">{{ t('pn.downloads') }}</h2>
+  {% if dls %}
+  <table class="list">
+    <thead><tr><th scope="col">{{ t('rc.date') }}</th><th scope="col">Utwór</th><th scope="col">{{ t('rc.file') }}</th><th scope="col">{{ t('tr.legal') }}</th><th scope="col"></th></tr></thead>
+    <tbody>{% for d in dls %}
+      <tr><td>{{ d.created[:16].replace('T',' ') }}</td><td><a href="{{ url_for('track', slug=d.slug) }}">{{ d.title }}</a></td><td>{{ d.filename }}</td>
+          <td>{{ t('lg.version') }} {{ d.legal_version }}</td><td><a href="{{ url_for('receipt', did=d.id) }}">{{ t('pn.receipt') }}</a></td></tr>
+    {% endfor %}</tbody>
+  </table>
+  {% else %}<p class="muted">{{ t('pn.downloads.empty') }}</p>{% endif %}
+</section>
+
+<section id="separacje" aria-labelledby="h-sep">
+  <h2 id="h-sep">{{ t('pn.separations') }}</h2>
+  {% if jobs %}{% include '_jobs.html' %}{% else %}<p class="muted">{{ t('pn.separations.empty') }} <a href="{{ url_for('separator') }}">{{ t('nav.separator') }} →</a></p>{% endif %}
+</section>
+
+<section id="aktywnosc" aria-labelledby="h-act">
+  <h2 id="h-act">{{ t('pn.activity') }}</h2>
+  {% if posts %}<ul class="plain posts">{% for p in posts %}<li><span class="tag">{{ t('com.t.' ~ p.type) }}</span> <a href="{{ url_for('post', pid=p.id) }}">{{ p.title }}</a> <span class="muted">{{ fmt_date(p.created) }} · {{ p.nrep }} {{ t('com.replies')|lower }}</span></li>{% endfor %}</ul>
+  {% else %}<p class="muted">{{ t('com.empty') }} <a href="{{ url_for('community') }}#nowy">{{ t('com.new') }} →</a></p>{% endif %}
+</section>
+
+<section id="ustawienia" aria-labelledby="h-set">
+  <h2 id="h-set">{{ t('pn.settings') }}</h2>
+  <form method="post" class="card form">
+    <input type="hidden" name="csrf" value="{{csrf}}">
+    <p><label for="name">{{ t('acc.name') }}</label><input id="name" name="name" value="{{ me.name }}"></p>
+    <p><label for="profile">{{ t('acc.role') }}</label><input id="profile" name="profile" value="{{ me.profile or '' }}"></p>
+    <p><label for="plang">{{ t('nav.lang') }}</label><select id="plang" name="lang">{% for k,v in LANGS.items() %}<option value="{{k}}" {% if k==me.lang %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></p>
+    <p class="muted">{{ t('acc.email') }}: {{ me.email }}</p>
+    <p><button class="btn">{{ t('pn.save') }}</button></p>
+  </form>
+  <p><a href="{{ url_for('export_data') }}">{{ t('pn.export') }}</a></p>
+  <form method="post" action="{{ url_for('delete_account') }}" onsubmit="return confirm('{{ t('pn.delete.confirm') }}')">
+    <input type="hidden" name="csrf" value="{{csrf}}"><button class="link danger">{{ t('pn.delete') }}</button></form>
+</section>
+{% endblock %}

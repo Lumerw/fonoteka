@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="{{ 'uk' if L=='uk' else L }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Fonoteka{% endblock %} · Fonoteka</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% if static_demo %}<meta name="robots" content="noindex, nofollow">{% endif %}
+{% block head %}{% endblock %}
+</head>
+<body>
+<a class="skip" href="#tresc">{{ t('nav.skip') }}</a>
+<header class="site">
+  <div class="wrap bar">
+    <a class="logo" href="{{ url_for('home') }}">Fonoteka</a>
+    <nav aria-label="Menu główne">
+      <ul class="menu">
+        <li><a href="{{ url_for('catalog') }}" {% if request.endpoint in ('catalog','track') %}aria-current="page"{% endif %}>{{ t('nav.catalog') }}</a></li>
+        <li><a href="{{ url_for('separator') }}" {% if request.endpoint in ('separator','job') %}aria-current="page"{% endif %}>{{ t('nav.separator') }}</a></li>
+        <li><a href="{{ url_for('denoise_page') }}" {% if request.endpoint=='denoise_page' %}aria-current="page"{% endif %}>{{ t('nav.denoise') }}</a></li>
+        <li><a href="{{ url_for('community') }}" {% if request.endpoint in ('community','post') %}aria-current="page"{% endif %}>{{ t('nav.community') }}</a></li>
+        <li><a href="{{ url_for('blog') }}" {% if request.endpoint in ('blog','blog_post') %}aria-current="page"{% endif %}>{{ t('nav.blog') }}</a></li>
+        <li><a href="{{ url_for('about') }}" {% if request.endpoint=='about' %}aria-current="page"{% endif %}>{{ t('nav.about') }}</a></li>
+      </ul>
+    </nav>
+    <div class="account">
+      {% if static_demo %}
+      <nav class="lang" aria-label="{{ t('nav.lang') }}">{% for k,v in LANGS.items() %}<a href="{{ ('' if k=='pl' else '/' ~ k) ~ request.path }}" lang="{{k}}" {% if k==L %}aria-current="true"{% endif %}>{{ k|upper }}</a> {% endfor %}</nav>
+      {% else %}
+      <form class="lang" method="get" action="">
+        <label for="lang" class="sr">{{ t('nav.lang') }}</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+          {% for k,v in LANGS.items() %}<option value="{{k}}" {% if k==L %}selected{% endif %}>{{ k|upper }}</option>{% endfor %}
+        </select>
+        <noscript><button>OK</button></noscript>
+      </form>
+      {% endif %}
+      {% if me %}
+        {% if me.role=='admin' %}<a href="{{ url_for('admin') }}">{{ t('nav.admin') }}</a>{% endif %}
+        <a class="btn small" href="{{ url_for('panel') }}">{{ t('nav.panel') }}</a>
+        <form method="post" action="{{ url_for('logout') }}" class="inline"><input type="hidden" name="csrf" value="{{csrf}}"><button class="link">{{ t('nav.logout') }}</button></form>
+      {% else %}
+        <a href="{{ url_for('login') }}">{{ t('nav.login') }}</a>
+        <a class="btn small" href="{{ url_for('register') }}">{{ t('nav.register') }}</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+{% if static_demo %}<div class="demo-bar"><div class="wrap">{{ t('demo.bar') }}</div></div>{% endif %}
+<main id="tresc" class="wrap">
+  {% with msgs = get_flashed_messages() %}{% if msgs %}<div class="flash" role="status">{% for m in msgs %}<p>{{ m }}</p>{% endfor %}</div>{% endif %}{% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <p><strong>Fonoteka</strong> – {{ t('ft.free') }}</p>
+      <p>{{ t('ft.pd') }}</p>
+      <p class="muted">{{ t('ft.proto') }}</p>
+    </div>
+    <ul class="plain">
+      <li><a href="{{ url_for('page', name='regulamin') }}">{{ t('ft.terms') }}</a></li>
+      <li><a href="{{ url_for('page', name='prywatnosc') }}">{{ t('ft.privacy') }}</a></li>
+      <li><a href="{{ url_for('page', name='dostepnosc') }}">{{ t('ft.a11y') }}</a></li>
+      <li><a href="{{ url_for('about') }}">{{ t('nav.about') }}</a></li>
+    </ul>
+  </div>
+</footer>
+{% block scripts %}{% endblock %}
+{% if static_demo %}<script>
+document.querySelectorAll('form[method=post]').forEach(f => { f.querySelectorAll('button, input, select, textarea').forEach(e => e.disabled = true);
+  const p = document.createElement('p'); p.className = 'note'; p.textContent = {{ t('demo.form')|tojson }}; f.prepend(p); });
+// filtrowanie katalogu po stronie przeglądarki (wersja statyczna)
+const qs = new URLSearchParams(location.search), q = (qs.get('q') || '').toLowerCase(), g = qs.get('gatunek') || '';
+if ((q || g) && document.querySelector('ul.tracks')) { let n = 0;
+  document.querySelectorAll('ul.tracks .track-row').forEach(li => { const ok = (!q || li.textContent.toLowerCase().includes(q)) && (!g || li.textContent.includes(g)); li.hidden = !ok; n += ok; });
+  const st = document.querySelector('[role=status]'); if (st) st.textContent = st.textContent.replace(/\d+$/, n);
+  const qi = document.getElementById('q'); if (qi) qi.value = qs.get('q') || ''; }
+</script>{% endif %}
+</body>
+</html>

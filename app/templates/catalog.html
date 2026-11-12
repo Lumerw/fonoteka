@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% from '_macros.html' import track_row with context %}
+{% block title %}{{ t('cat.title') }}{% endblock %}
+{% block content %}
+<h1>{{ t('cat.title') }}</h1>
+<form class="filters" method="get" role="search">
+  <div><label for="q">{{ t('cat.q') }}</label><input id="q" name="q" type="search" value="{{ q }}" placeholder="{{ t('home.search') }}"></div>
+  <div><label for="g">{{ t('cat.genre') }}</label>
+    <select id="g" name="gatunek"><option value="">{{ t('cat.all') }}</option>{% for x in genres %}<option {% if x==genre %}selected{% endif %}>{{ x }}</option>{% endfor %}</select></div>
+  <div><button class="btn">{{ t('cat.filter') }}</button></div>
+</form>
+<p class="muted" role="status">{{ t('cat.results') }}: {{ tracks|length }}</p>
+<ul class="tracks">{% for tr in tracks %}{{ track_row(tr) }}{% else %}<li>{{ t('cat.none') }}</li>{% endfor %}</ul>
+{% endblock %}

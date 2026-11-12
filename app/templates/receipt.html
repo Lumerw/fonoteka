@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_badge with context %}
+{% block title %}{{ t('rc.title') }}{% endblock %}
+{% block content %}
+<article class="receipt">
+  <h1>{{ t('rc.title') }}</h1>
+  <p>{{ t('rc.lead') }}</p>
+  <dl class="grid">
+    <dt>Nr</dt><dd><code>{{ d.id }}</code></dd>
+    <dt>{{ t('rc.date') }}</dt><dd>{{ d.created.replace('T',' ') }}</dd>
+    <dt>{{ t('rc.user') }}</dt><dd>{{ me.email }}</dd>
+    <dt>Utwór</dt><dd>{{ d.title }} – muz. {{ d.composer }} ({{ d.composer_dates }}){% if d.lyricist %}, sł. {{ d.lyricist }} ({{ d.lyricist_dates }}){% endif %}</dd>
+    <dt>{{ t('tr.performer') }}</dt><dd>{{ d.performer }}, {{ d.year }}</dd>
+    <dt>{{ t('rc.file') }}</dt><dd>{{ d.filename }}</dd>
+    <dt>SHA-256</dt><dd><code class="hash">{{ d.sha256 }}</code></dd>
+    <dt>{{ t('tr.legal') }}</dt><dd>{{ status_badge(d.legal_status) }} · {{ t('lg.version') }} {{ d.legal_version }}</dd>
+    <dt>{{ t('lg.work') }}</dt><dd>{{ d.legal_work }}</dd>
+    <dt>{{ t('lg.recording') }}</dt><dd>{{ d.legal_recording }}</dd>
+    <dt>{{ t('tr.source') }}</dt><dd>{{ d.source_name }} {{ d.source_url }}</dd>
+    <dt>Adres</dt><dd>{{ request.host_url }}utwor/{{ d.slug }}</dd>
+  </dl>
+  <p class="muted">{{ t('lg.disclaimer') }}</p>
+  <p class="noprint"><button class="btn" onclick="window.print()">{{ t('rc.print') }}</button> <a href="{{ url_for('panel') }}#pobrania">{{ t('gen.back') }}</a></p>
+</article>
+{% endblock %}

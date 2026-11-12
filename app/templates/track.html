@@ -1,0 +1,124 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_badge, post_item with context %}
+{% block title %}{{ tr.title }}{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="Okruszki"><a href="{{ url_for('catalog') }}">{{ t('nav.catalog') }}</a> / <span>{{ tr.title }}</span></nav>
+{% if tr.status != 'published' %}<p class="flash">Podgląd administratora – status: {{ tr.status }}</p>{% endif %}
+<header class="track-head">
+  <h1>{{ tr.title }}</h1>
+  <dl class="facts">
+    <div><dt>{{ t('tr.composer') }}</dt><dd>{{ tr.composer }} {% if tr.composer_dates %}<span class="muted">({{ tr.composer_dates }})</span>{% endif %}</dd></div>
+    {% if tr.lyricist %}<div><dt>{{ t('tr.lyricist') }}</dt><dd>{{ tr.lyricist }} {% if tr.lyricist_dates %}<span class="muted">({{ tr.lyricist_dates }})</span>{% endif %}</dd></div>{% endif %}
+    <div><dt>{{ t('tr.performer') }}</dt><dd>{{ tr.performer }}</dd></div>
+    <div><dt>{{ t('tr.year') }}</dt><dd>{{ tr.year }}{% if tr.label %} · {{ tr.label }}{% endif %}</dd></div>
+  </dl>
+  <p>{{ status_badge(tr.legal_status) }}</p>
+  <div class="actions">
+    {% if me %}
+    <form method="post" action="{{ url_for('toggle_save', slug=tr.slug) }}" class="inline"><input type="hidden" name="csrf" value="{{csrf}}">
+      <button class="btn secondary" aria-pressed="{{ 'true' if saved else 'false' }}">{{ t('tr.saved') if saved else t('tr.save') }}</button></form>
+    {% endif %}
+    <a class="btn secondary" href="#pobierz">{{ t('tr.download') }}</a>
+    <a href="{{ url_for('community', nowy='poprawka', utwor=tr.id) }}#nowy">{{ t('tr.report') }}</a>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sekcje utworu">
+  <a href="#odsluch">{{ t('tr.listen') }}</a><a href="#opis">{{ t('tr.about') }}</a><a href="#karta">{{ t('tr.legal') }}</a><a href="#nuty">{{ t('tr.notation') }}</a><a href="#pobierz">{{ t('tr.download') }}</a><a href="#spolecznosc">{{ t('nav.community') }}</a>
+</nav>
+
+<section id="odsluch" aria-labelledby="h-listen">
+  <h2 id="h-listen">{{ t('tr.listen') }}</h2>
+  {% if files.preview %}
+  <h3>{{ t('tr.original') }}</h3>
+  <audio controls preload="none" src="{{ url_for('track_media', slug=tr.slug, name='podglad.mp3') }}"></audio>
+  {% endif %}
+  {% if files.stems %}
+  <h3>{{ t('tr.mixer') }}</h3>
+  <p class="muted">{{ t('tr.mixer.help') }}</p>
+  {% set stems = [('wokal','Wokal', url_for('track_media', slug=tr.slug, name='wokal.mp3')), ('rytm','Rytm (perkusja + bas)', url_for('track_media', slug=tr.slug, name='rytm.mp3')), ('melodia','Melodia (pozostałe instrumenty)', url_for('track_media', slug=tr.slug, name='melodia.mp3'))] %}
+  {% include '_mixer.html' %}
+  {% endif %}
+</section>
+
+<section id="opis" aria-labelledby="h-about">
+  <h2 id="h-about">{{ t('tr.about') }}</h2>
+  {% for para in tr_desc(tr).split('\n') if para.strip() %}<p>{{ para }}</p>{% endfor %}
+  {% if L!='pl' and not tr['desc_' ~ L] %}<p class="muted">{{ t('gen.only_pl') }}</p>{% endif %}
+  <p><strong>{{ t('tr.source') }}:</strong> {% if tr.source_url %}<a href="{{ tr.source_url }}" rel="noopener">{{ tr.source_name }}</a>{% else %}{{ tr.source_name }}{% endif %}</p>
+  <details class="box">
+    <summary>{{ t('tr.ai') }}</summary>
+    <ul>
+      <li>Odszumianie (bez AI): filtr dudnienia 50 Hz, usuwanie trzasków (adeclick), odejmowanie widma szumu z najcichszego fragmentu (afftdn), pasmo do 9 kHz, normalizacja głośności.{% if proc.denoise and proc.denoise.noise_reduction_db %} Szum w ciszy zmniejszony o {{ proc.denoise.noise_reduction_db }} dB.{% endif %}</li>
+      <li>Separacja: {{ proc.model or 'Demucs htdemucs (licencja MIT)' }} – otwarty model, nie trenowaliśmy go na tych nagraniach.</li>
+      <li>Wokal = ścieżka „vocals”; rytm = „drums” + „bass”; melodia = „other”. W nagraniach mono z lat 30. ścieżki przenikają się – słychać to szczególnie w partii orkiestry.</li>
+      <li>AI nie generuje głosu ani dźwięków, których nie ma w oryginale.</li>
+      {% if proc.seconds %}<li class="muted">Czas przetwarzania: {{ proc.seconds }} s.</li>{% endif %}
+    </ul>
+  </details>
+</section>
+
+<section id="karta" aria-labelledby="h-legal">
+  <h2 id="h-legal">{{ t('tr.legal') }}</h2>
+  <div class="legal">
+    <p>{{ status_badge(tr.legal_status) }} <span class="muted">{{ t('lg.version') }} {{ tr.legal_version }} · {{ tr.legal_date }}</span></p>
+    <dl>
+      <dt>{{ t('lg.work') }}</dt><dd>{{ tr.legal_work }}</dd>
+      <dt>{{ t('lg.recording') }}</dt><dd>{{ tr.legal_recording }}</dd>
+      <dt>{{ t('lg.sources') }}</dt><dd><ul>{% for s in sources %}<li>{% if s.startswith('http') %}<a href="{{ s }}" rel="noopener">{{ s }}</a>{% else %}{{ s }}{% endif %}</li>{% endfor %}</ul></dd>
+    </dl>
+    <p class="muted">{{ t('lg.disclaimer') }}</p>
+  </div>
+</section>
+
+<section id="nuty" aria-labelledby="h-notes">
+  <h2 id="h-notes">{{ t('tr.notation') }}</h2>
+  {% if tr.abc %}
+  <p class="note">{{ t('tr.notation.draft') }}</p>
+  <div id="paper" class="paper" aria-label="Zapis nutowy"></div>
+  <details><summary>ABC</summary><pre id="abc-src">{{ tr.abc }}</pre></details>
+  {% else %}<p class="muted">—</p>{% endif %}
+  <h3>{{ t('tr.lyrics') }}</h3>
+  {% if tr.lyrics %}<pre class="lyrics">{{ tr.lyrics }}</pre>{% else %}<p class="muted">{{ t('tr.lyrics.todo') }}</p>{% endif %}
+</section>
+
+<section id="pobierz" aria-labelledby="h-dl">
+  <h2 id="h-dl">{{ t('tr.download') }}</h2>
+  {% if not me %}
+    <p>{{ t('tr.login_to_dl') }}</p>
+    <p><a class="btn" href="{{ url_for('login', next=request.path) }}">{{ t('nav.login') }}</a> <a href="{{ url_for('register') }}">{{ t('nav.register') }}</a></p>
+  {% else %}
+  <form method="post" action="{{ url_for('download', slug=tr.slug) }}" class="dl">
+    <input type="hidden" name="csrf" value="{{csrf}}">
+    <p><label><input type="checkbox" name="accept" value="{{ tr.legal_version }}" required> {{ t('tr.accept') }} {{ tr.legal_version }} (<a href="#karta">{{ t('tr.legal')|lower }}</a>).</label></p>
+    <div class="dl-grid">
+      {% if files.mp3 %}<button class="btn secondary" name="kind" value="mp3">{{ t('tr.dl.mp3') }}</button>{% endif %}
+      {% if files.flac %}<button class="btn secondary" name="kind" value="flac">{{ t('tr.dl.flac') }}</button>{% endif %}
+      {% if files.zip %}<button class="btn" name="kind" value="zip">{{ t('tr.dl.zip') }}</button>{% endif %}
+      {% if files.stems %}
+        <button class="btn secondary" name="kind" value="wokal">Wokal (FLAC)</button>
+        <button class="btn secondary" name="kind" value="podklad">Podkład (FLAC)</button>
+        <button class="btn secondary" name="kind" value="rytm">Rytm (FLAC)</button>
+        <button class="btn secondary" name="kind" value="melodia">Melodia (FLAC)</button>
+      {% endif %}
+      {% if tr.abc %}<button class="btn secondary" name="kind" value="abc">{{ t('tr.dl.abc') }}</button>{% endif %}
+    </div>
+    <p class="muted">Każde pobranie zapisujemy w Twoim panelu z potwierdzeniem statusu prawnego.</p>
+  </form>
+  {% endif %}
+</section>
+
+<section id="spolecznosc" aria-labelledby="h-com">
+  <h2 id="h-com">{{ t('tr.discussion') }}</h2>
+  <ul class="plain posts">{% for p in posts %}{{ post_item(p) }}{% else %}<li class="muted">{{ t('com.empty') }}</li>{% endfor %}</ul>
+  <p><a href="{{ url_for('community', nowy='projekt', utwor=tr.id) }}#nowy">{{ t('com.new') }} →</a></p>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='mixer.js') }}"></script>
+{% if tr.abc %}
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
+<script>
+  if (window.ABCJS) ABCJS.renderAbc('paper', document.getElementById('abc-src').textContent, {responsive: 'resize', add_classes: true});
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}{{ tr.title if tr else 'Nowy utwór' }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('admin') }}">{{ t('nav.admin') }}</a> / {{ tr.title if tr else 'Nowy utwór' }}</nav>
+<h1>{{ tr.title if tr else 'Nowy utwór' }}</h1>
+{% if tr %}<p>Status publikacji: <strong>{{ tr.status }}</strong> · karta v{{ tr.legal_version }} · <a href="{{ url_for('track', slug=tr.slug) }}">podgląd strony</a></p>{% endif %}
+<form method="post" enctype="multipart/form-data" class="form admin-form">
+  <input type="hidden" name="csrf" value="{{csrf}}">
+  <fieldset><legend>Metadane</legend>
+  {% for k,label in [('title','Tytuł'),('composer','Kompozytor'),('composer_dates','Daty życia kompozytora'),('lyricist','Autor tekstu'),('lyricist_dates','Daty życia autora tekstu'),('performer','Wykonawcy'),('label','Wytwórnia / nr katalogowy'),('year','Rok nagrania'),('source_name','Źródło kopii'),('source_url','URL źródła')] %}
+  <p><label for="{{k}}">{{ label }}</label><input id="{{k}}" name="{{k}}" value="{{ tr[k] if tr and tr[k] else '' }}" {% if k=='title' %}required{% endif %}></p>
+  {% endfor %}
+  <p><label for="genre">Gatunek</label><select id="genre" name="genre">{% for gg in genres %}<option {% if tr and tr.genre==gg %}selected{% endif %}>{{ gg }}</option>{% endfor %}</select></p>
+  {% for k,label in [('desc_pl','Opis (PL)'),('desc_en','Opis (EN)'),('desc_uk','Opis (UA)'),('lyrics','Tekst piosenki')] %}
+  <p><label for="{{k}}">{{ label }}</label><textarea id="{{k}}" name="{{k}}" rows="4">{{ tr[k] if tr and tr[k] else '' }}</textarea></p>
+  {% endfor %}
+  </fieldset>
+  <fieldset><legend>Karta prawna (zmiana podnosi wersję karty)</legend>
+  <p><label for="legal_status">Status</label><select id="legal_status" name="legal_status">{% for s in ['candidate','preliminary','verified','blocked'] %}<option value="{{s}}" {% if tr and tr.legal_status==s %}selected{% endif %}>{{ t('st.' ~ s) }}</option>{% endfor %}</select></p>
+  <p><label for="legal_work">Utwór (kompozycja i tekst)</label><textarea id="legal_work" name="legal_work" rows="3">{{ tr.legal_work if tr and tr.legal_work else '' }}</textarea></p>
+  <p><label for="legal_recording">Nagranie (prawa pokrewne)</label><textarea id="legal_recording" name="legal_recording" rows="3">{{ tr.legal_recording if tr and tr.legal_recording else '' }}</textarea></p>
+  <p><label for="legal_sources">Źródła (po jednym w wierszu)</label><textarea id="legal_sources" name="legal_sources" rows="4">{{ sources }}</textarea></p>
+  </fieldset>
+  <fieldset><legend>Zapis nutowy (ABC)</legend>
+  <p><label for="abc">ABC – szkic automatyczny do korekty</label><textarea id="abc" name="abc" rows="10" class="mono">{{ tr.abc if tr and tr.abc else '' }}</textarea></p>
+  </fieldset>
+  <fieldset><legend>Nagranie</legend>
+  <p><label for="audio">{{ 'Podmień nagranie i przetwórz ponownie' if tr else 'Plik nagrania (separacja i szkic nut uruchomią się po zapisaniu)' }}</label><input id="audio" name="audio" type="file" accept="audio/*,.flac"></p>
+  {% if tr %}<p><label for="status">Publikacja</label><select id="status" name="status">{% for s in ['draft','review','published'] %}<option {% if tr.status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></p>{% endif %}
+  </fieldset>
+  <p><button class="btn">Zapisz</button></p>
+</form>
+{% endblock %}

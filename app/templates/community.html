@@ -1,0 +1,29 @@
+{% extends 'base.html' %}{% from '_macros.html' import post_item with context %}
+{% block title %}{{ t('com.title') }}{% endblock %}
+{% block content %}
+<h1>{{ t('com.title') }}</h1>
+<p class="lead">{{ t('com.lead') }}</p>
+<nav class="tabs" aria-label="Filtr">
+  <a href="{{ url_for('community') }}" {% if not typ %}aria-current="page"{% endif %}>{{ t('cat.all') }}</a>
+  {% for x in types %}<a href="{{ url_for('community', typ=x) }}" {% if typ==x %}aria-current="page"{% endif %}>{{ t('com.t.' ~ x) }}</a>{% endfor %}
+</nav>
+<ul class="plain posts">{% for p in posts %}{{ post_item(p) }}{% if p.ttitle %}<li class="sub muted">↳ <a href="{{ url_for('track', slug=p.tslug) }}">{{ p.ttitle }}</a></li>{% endif %}{% else %}<li class="muted">{{ t('com.empty') }}</li>{% endfor %}</ul>
+
+<section id="nowy" aria-labelledby="h-new">
+<h2 id="h-new">{{ t('com.new') }}</h2>
+<p class="muted">{{ t('com.rules') }}</p>
+{% if me %}
+<form method="post" class="card form">
+  <input type="hidden" name="csrf" value="{{csrf}}">
+  <p><label for="type">{{ t('com.type') }}</label>
+    <select id="type" name="type">{% for x in types %}<option value="{{x}}" {% if pre.type==x %}selected{% endif %}>{{ t('com.t.' ~ x) }}</option>{% endfor %}</select></p>
+  <p><label for="track_id">{{ t('com.f.track') }}</label>
+    <select id="track_id" name="track_id"><option value="">—</option>{% for tr in tracks %}<option value="{{tr.id}}" {% if pre.track==tr.id|string %}selected{% endif %}>{{ tr.title }}</option>{% endfor %}</select></p>
+  <p><label for="title">{{ t('com.f.title') }}</label><input id="title" name="title" required maxlength="200"></p>
+  <p><label for="body">{{ t('com.f.body') }}</label><textarea id="body" name="body" rows="5" required></textarea></p>
+  <p><label for="link">{{ t('com.f.link') }}</label><input id="link" name="link" type="url" placeholder="https://"></p>
+  <p><button class="btn">{{ t('com.publish') }}</button></p>
+</form>
+{% else %}<p><a class="btn" href="{{ url_for('login', next='/spolecznosc') }}">{{ t('nav.login') }}</a> {{ t('com.login') }}</p>{% endif %}
+</section>
+{% endblock %}

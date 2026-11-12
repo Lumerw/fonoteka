@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}{{ {'regulamin': t('ft.terms'), 'prywatnosc': t('ft.privacy'), 'dostepnosc': t('ft.a11y')}[name] }}{% endblock %}
+{% block content %}
+<article class="prose">
+{% if name=='regulamin' %}
+<h1>{{ t('ft.terms') }}</h1>
+<p class="flash">Szkic do opracowania przez prawnika. Nie jest to obowiązujący regulamin.</p>
+<p>Zakres do uregulowania:</p>
+<ul>
+  <li>zasady korzystania z katalogu i pobierania plików (bezpłatnie, po zalogowaniu);</li>
+  <li>status prawny materiałów i znaczenie karty prawnej (wersjonowanie, zastrzeżenia);</li>
+  <li>separator: oświadczenie użytkownika o prawach do nagrania, limit 5 minut, usuwanie plików po 24 h, procedura zgłaszania i usuwania treści;</li>
+  <li>społeczność: zasady publikacji, moderacja, zgłaszanie naruszeń;</li>
+  <li>licencje: Znak Domeny Publicznej, CC0 dla zapisu nutowego, licencje kodu i przewodnika;</li>
+  <li>odpowiedzialność, reklamacje, kontakt.</li>
+</ul>
+{% elif name=='prywatnosc' %}
+<h1>{{ t('ft.privacy') }}</h1>
+<p class="flash">Szkic do opracowania przez prawnika.</p>
+<ul>
+  <li>Zbieramy: adres e-mail, imię lub pseudonim, opcjonalny profil, historię pobrań i wpisy w społeczności.</li>
+  <li>Pliki wgrane do separatora usuwamy automatycznie po 24 godzinach.</li>
+  <li>Nie używamy reklamowych plików cookie; sesja jest przechowywana w niezbędnym pliku cookie.</li>
+  <li>W panelu możesz pobrać swoje dane (JSON) i usunąć konto.</li>
+</ul>
+{% else %}
+<h1>{{ t('ft.a11y') }}</h1>
+<p>Celem jest zgodność z WCAG 2.2 AA, potwierdzona zewnętrznym audytem. Prototyp ma: nawigację klawiaturą, link „przejdź do treści”, etykiety pól, kontrast min. 4,5:1, komunikaty o postępie dla czytników ekranu i mikser obsługiwany klawiaturą.</p>
+<p>Znane ograniczenia prototypu: zapis nutowy jest grafiką (dostępny także jako tekst ABC); szkic nut nie ma jeszcze opisu słownego.</p>
+{% endif %}
+</article>
+{% endblock %}

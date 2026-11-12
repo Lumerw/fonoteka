@@ -1,0 +1,28 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_badge with context %}
+{% block title %}{{ t('nav.admin') }}{% endblock %}
+{% block content %}
+<h1>{{ t('nav.admin') }}</h1>
+<p class="muted">Konta: {{ stats.users }} · pobrania: {{ stats.downloads }} · zadania separacji: {{ stats.jobs }}</p>
+<p><a class="btn" href="{{ url_for('admin_track', tid=None) }}">+ Dodaj utwór</a></p>
+<h2>Utwory</h2>
+<table class="list">
+  <thead><tr><th scope="col">Tytuł</th><th scope="col">Publikacja</th><th scope="col">Status prawny</th><th scope="col">Karta</th></tr></thead>
+  <tbody>{% for tr in tracks %}
+  <tr><td><a href="{{ url_for('admin_track', tid=tr.id) }}">{{ tr.title }}</a></td><td>{{ tr.status }}</td><td>{{ status_badge(tr.legal_status) }}</td><td>v{{ tr.legal_version }}</td></tr>
+  {% endfor %}</tbody>
+</table>
+<p class="muted">Przepływ: dodanie nagrania → separacja i szkic nut w kolejce → status „review” (odsłuch realizatora, opinia prawnika, korekta nut) → publikacja.</p>
+
+<h2>Kolejka zadań</h2>
+<table class="list">
+  <thead><tr><th scope="col">Rodzaj</th><th scope="col">Plik</th><th scope="col">Status</th><th scope="col">Postęp</th><th scope="col">Utworzono</th></tr></thead>
+  <tbody>{% for j in jobs %}<tr><td>{{ j.kind }}</td><td>{{ j.filename.split('/')[-1] }}</td><td>{{ j.status }}</td><td>{{ j.progress }}% {{ j.message or '' }}</td><td>{{ j.created[:16] }}</td></tr>{% endfor %}</tbody>
+</table>
+
+<h2>Kandydaci do weryfikacji prawnej ({{ cands|length }})</h2>
+<p class="muted">Wstępna lista dla prawnika – szczegóły w pliku docs/kandydaci-domena-publiczna.md.</p>
+<table class="list small">
+  <thead><tr><th scope="col">Utwór</th><th scope="col">Muzyka</th><th scope="col">Słowa</th><th scope="col">Nagranie</th><th scope="col">Status wstępny</th><th scope="col">Uwagi</th></tr></thead>
+  <tbody>{% for c in cands %}<tr><td>{% if c.source %}<a href="{{ c.source }}" rel="noopener">{{ c.title }}</a>{% else %}{{ c.title }}{% endif %}</td><td>{{ c.composer }}</td><td>{{ c.lyricist }}</td><td>{{ c.recording }}</td><td>{{ c.status }}</td><td>{{ c.note }}</td></tr>{% endfor %}</tbody>
+</table>
+{% endblock %}

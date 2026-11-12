@@ -1,0 +1,10 @@
+<table class="list">
+  <thead><tr><th scope="col">Plik</th><th scope="col">{{ t('com.type') }}</th><th scope="col">Status</th><th scope="col">{{ t('sep.expires') }}</th></tr></thead>
+  <tbody>
+  {% for j in jobs %}
+  <tr><td>{% if j.status!='expired' %}<a href="{{ url_for('job', jid=j.id) }}">{{ j.filename }}</a>{% else %}{{ j.filename }}{% endif %}</td><td>{{ t('dn.kind.' ~ j.kind) }}</td>
+      <td>{{ t('sep.status.' ~ j.status) if j.status!='expired' else '—' }}</td>
+      <td>{{ j.expires[:16].replace('T',' ') if j.expires }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>

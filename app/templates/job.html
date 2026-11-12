@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}{{ t('job.title') }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('separator') }}">{{ t('nav.separator') }}</a> / {{ j.filename }}</nav>
+<h1>{{ t('job.title') }}: {{ j.filename }}</h1>
+{% if j.status in ('queued','running') %}
+<div id="progress" data-api="{{ url_for('job_api', jid=j.id) }}">
+  <progress max="100" value="{{ j.progress }}" aria-describedby="pmsg"></progress>
+  <p id="pmsg" role="status" aria-live="polite">{{ j.message or t('sep.status.' ~ j.status) }}</p>
+  <p class="muted">{{ t('job.wait') }}</p>
+</div>
+<script>
+  (function poll(){ const el=document.getElementById('progress');
+    fetch(el.dataset.api).then(r=>r.json()).then(d=>{ el.querySelector('progress').value=d.progress; document.getElementById('pmsg').textContent=d.message||d.status;
+      if(d.status==='done'||d.status==='error'){ location.reload(); } else setTimeout(poll,2000); }); })();
+</script>
+{% elif j.status=='error' %}
+<p class="flash">{{ t('sep.status.error') }}: {{ j.message }}</p>
+{% elif j.status=='done' and j.kind=='denoise' %}
+<p>{{ t('sep.expires') }}: {{ j.expires[:16].replace('T',' ') }}.</p>
+{% if meta.noise_reduction_db %}<p class="lead">{{ t('dn.result') }} <strong>{{ meta.noise_reduction_db }} dB</strong>.</p>{% endif %}
+<h2>{{ t('dn.ab') }}</h2>
+<div class="ab" data-a="{{ url_for('job_file', jid=j.id, name='przed.mp3') }}" data-b="{{ url_for('job_file', jid=j.id, name='po.mp3') }}">
+  <audio controls preload="auto" src="{{ url_for('job_file', jid=j.id, name='po.mp3') }}"></audio>
+  <div role="radiogroup" aria-label="{{ t('dn.ab') }}" class="ab-switch">
+    <label><input type="radio" name="ab" value="a"> {{ t('dn.before') }}</label>
+    <label><input type="radio" name="ab" value="b" checked> {{ t('dn.after') }}</label>
+  </div>
+</div>
+<h2>{{ t('tr.download') }}</h2>
+<div class="dl-grid">
+  <a class="btn" href="{{ url_for('job_file', jid=j.id, name='odszumione.flac') }}">{{ t('tr.dl.flac') }}</a>
+  <a class="btn secondary" href="{{ url_for('job_file', jid=j.id, name='odszumione.mp3', dl=1) }}">{{ t('tr.dl.mp3') }}</a>
+</div>
+<details class="box"><summary>{{ t('dn.how') }}</summary><p>{{ t('dn.how.d') }}</p><pre>{{ meta|tojson(indent=1) }}</pre></details>
+<script>
+document.querySelectorAll('.ab').forEach(el => { const au = el.querySelector('audio');
+  el.querySelectorAll('input[name=ab]').forEach(r => r.addEventListener('change', () => {
+    const t = au.currentTime, playing = !au.paused; au.src = r.value === 'a' ? el.dataset.a : el.dataset.b;
+    au.addEventListener('loadedmetadata', () => { au.currentTime = t; if (playing) au.play(); }, {once: true}); })); });
+</script>
+{% elif j.status=='done' %}
+<p>{{ t('sep.expires') }}: {{ j.expires[:16].replace('T',' ') }}.</p>
+<h2>{{ t('tr.original') }}</h2>
+<audio controls src="{{ url_for('job_file', jid=j.id, name='podglad.mp3') }}"></audio>
+<h2>{{ t('tr.mixer') }}</h2>
+{% set stems = [('wokal','Wokal', url_for('job_file', jid=j.id, name='wokal.mp3')), ('rytm','Rytm', url_for('job_file', jid=j.id, name='rytm.mp3')), ('melodia','Melodia', url_for('job_file', jid=j.id, name='melodia.mp3'))] %}
+{% include '_mixer.html' %}
+<h2>{{ t('tr.download') }}</h2>
+<div class="dl-grid">
+  <a class="btn" href="{{ url_for('job_file', jid=j.id, name='stemy.zip') }}">{{ t('tr.dl.zip') }}</a>
+  {% for k in ['wokal','podklad','rytm','melodia'] %}<a class="btn secondary" href="{{ url_for('job_file', jid=j.id, name=k ~ '.flac') }}">{{ k|capitalize }} (FLAC)</a>{% endfor %}
+  <a class="btn secondary" href="{{ url_for('job_file', jid=j.id, name='nagranie.flac') }}">{{ t('tr.dl.flac') }}</a>
+</div>
+<details class="box"><summary>{{ t('tr.ai') }}</summary><pre>{{ meta|tojson(indent=1) }}</pre></details>
+{% else %}<p class="muted">—</p>{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='mixer.js') }}"></script>{% endblock %}
