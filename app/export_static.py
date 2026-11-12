@@ -33,7 +33,7 @@ def main():
         c = A.app.test_client()
         c.get("/?lang=" + lang)
         for path in pages(c):
-            r = c.get(path, environ_base={"SCRIPT_NAME": prefix})
+            r = c.get(path, base_url="http://localhost" + prefix)
             if r.status_code != 200:
                 print("BŁĄD", r.status_code, prefix + path)
                 continue
@@ -44,7 +44,7 @@ def main():
             out = os.path.join(DIST, (prefix + path).strip("/"), "index.html")
             os.makedirs(os.path.dirname(out), exist_ok=True)
             open(out, "w").write(html)
-        r = c.get("/nie-istnieje", environ_base={"SCRIPT_NAME": prefix})
+        r = c.get("/nie-istnieje", base_url="http://localhost" + prefix)
         if lang == "pl":
             open(os.path.join(DIST, "404.html"), "w").write(r.get_data(as_text=True))
     open(os.path.join(DIST, "_headers"), "w").write("/*\n  X-Robots-Tag: noindex, nofollow\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n")

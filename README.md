@@ -37,11 +37,13 @@ Dostępne jako osobne narzędzie (`/odszumianie`, odsłuch przed/po) i jako krok
 .venv/bin/python app/denoise.py wejscie.flac wynik.wav szelak
 ```
 
-## Wersja demonstracyjna na Cloudflare Pages
+## Wersja demonstracyjna na Cloudflare
+
+Adres: https://fonoteka.teraz-platforma.workers.dev (domyślna domena Cloudflare; własną domenę podpinamy później w panelu Cloudflare → Workers → fonoteka → Domains).
 
 ```bash
 .venv/bin/python app/export_static.py      # buduje dist/ (PL, /en, /uk)
-npx wrangler pages deploy dist --project-name fonoteka
+npx wrangler deploy                        # konfiguracja w wrangler.jsonc
 ```
 
 Wersja statyczna: odsłuch, mikser, karty prawne, nuty, blog, społeczność (do czytania). Formularze są wyłączone. Strona ma `noindex` do czasu opinii prawnej o redystrybucji plików. Pełna aplikacja (konta, pobieranie, separator, odszumianie) wymaga serwera z Pythonem i FFmpeg – Cloudflare Pages/Workers jej nie uruchomi.
